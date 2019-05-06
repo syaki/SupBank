@@ -8,7 +8,10 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import com.sun.org.apache.xml.internal.security.utils.Base64;
+import org.apache.commons.codec.binary.Base64;
+
+
+
 
 
 
@@ -41,7 +44,7 @@ public class Base64Utils {
      * @throws Exception
      */
     public static byte[] decode(String base64) throws Exception {
-        return Base64.decode(base64.getBytes());
+        return Base64.decodeBase64(base64.getBytes());
     }
 
     /**
@@ -54,7 +57,7 @@ public class Base64Utils {
      * @throws Exception
      */
     public static String encode(byte[] bytes) throws Exception {
-        return new String(Base64.encode(bytes));
+        return new String(Base64.encodeBase64(bytes));
     }
 
     /**

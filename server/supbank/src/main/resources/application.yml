@@ -19,4 +19,6 @@ logging:
   file: supbank_project_log.log
   level:
     com.supbank: DEBUG    
+ 
+
     

@@ -17,7 +17,12 @@ import java.util.Map;
 
 import javax.crypto.Cipher;
 
-import com.sun.org.apache.xml.internal.security.utils.Base64;
+import org.apache.commons.codec.binary.Base64;
+
+
+
+
+
 
 /**
  * <p>
@@ -81,7 +86,7 @@ public class RSAUtils {
         KeyPair keyPair = keyPairGen.generateKeyPair();
         RSAPublicKey publicKey = (RSAPublicKey) keyPair.getPublic();
         RSAPrivateKey privateKey = (RSAPrivateKey) keyPair.getPrivate();
-        String address = RipeMD160Util.encodeRipeMD160Hex(SHA256Util.SHA256(Base64.encode(publicKey.getEncoded())).getBytes());
+        String address = RipeMD160Util.encodeRipeMD160Hex(SHA256Util.SHA256(Base64.encodeBase64String(publicKey.getEncoded())).getBytes());
         Map<String, Object> keyMap = new HashMap<String, Object>(2);
         keyMap.put(PUBLIC_KEY, publicKey);
         keyMap.put(PRIVATE_KEY, privateKey);
