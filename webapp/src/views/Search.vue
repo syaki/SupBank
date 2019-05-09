@@ -13,7 +13,7 @@
                 <th>Nonce</th>
                 <th>Time</th>
               </tr>
-              <tr v-for="(t, k, i) in searchResultList">
+              <tr v-for="t in searchResultList" :key="t.height">
                 <td>{{t.height}}</td>
                 <td>{{t.hash}}</td>
                 <td>{{t.nonce}}</td>
