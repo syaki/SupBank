@@ -54,6 +54,9 @@
             },
             "lastTransactionData": [
                 {
+                    "length": 10
+                },
+                {
                     "hash": "string",
                     "height": "string",
                     "nonce": "string",
