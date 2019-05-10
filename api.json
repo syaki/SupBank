@@ -1,4 +1,5 @@
 {
+    "To": "WebApp",
     "method": "post",
     "getVerificationCode": {
         "url": "//39.105.83.9:8990/user/sendCode",
@@ -106,6 +107,62 @@
                     "timestamp": "string"
                 }
             ]
+        }
+    },
+    "statusPage": {
+        "url": "//39.105.83.9:8990/block/longestLegalChain",
+        "request": {
+            "pageNumber": "string"
+        },
+        "response": {
+            "status": {
+                "Ack": "success || error",
+                "ErrorMessage": "string",
+                "Timestamp": "string"
+            },
+            "BlockList": [
+                {
+                    "id": "int",
+                    "age": "int",
+                    "height": "int",
+                    "transactionNumber": "int",
+                    "miner": "string",
+                    "size": "double"
+                }
+            ]
+        }
+    },
+    "getBlockInfo": {
+        "url": "//39.105.83.9:8990/block/getBlockById",
+        "request": {
+            "id": "int"
+        },
+        "response": {
+            "status": {
+                "Ack": "success || error",
+                "ErrorMessage": "string",
+                "Timestamp": "string"
+            },
+            "BlockInfo": {
+                "id": "int",
+                "hash": "string",
+                "preHash": "string",
+                "MerkleRootHash": "string",
+                "transactionNumber": "int",
+                "height": "int",
+                "nonce": "int",
+                "blockReward": "double",
+                "BlockBody": {
+                    "Transactions": [
+                        {
+                            "timestamp": "string",
+                            "output": "string",
+                            "input": "string",
+                            "sum": "double"
+                        }
+                    ]
+                }
+            }
         }
     }
 }
