@@ -60,7 +60,7 @@ public class BlockService {
 		List<DataRow> longestLegalChain = new ArrayList<DataRow>();
 		int pageNumber = params.getInt("pageNumber");
 
-		
+
 		int pageSize = 5;
 
 
