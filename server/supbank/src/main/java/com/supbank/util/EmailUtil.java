@@ -14,6 +14,9 @@ public class EmailUtil {
 		try {
 			HtmlEmail email = new HtmlEmail();//不用更改
 			email.setHostName("smtp.qq.com");//需要修改，126邮箱为smtp.126.com,163邮箱为163.smtp.com，QQ为smtp.qq.com
+//			email.setSmtpPort(465);
+			email.setSslSmtpPort("465");
+			email.setSSLOnConnect(true);
 			email.setCharset("UTF-8");
 			email.addTo(emailaddress);// 收件地址
  

@@ -3,6 +3,8 @@ package com.supbank.controller;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import com.alibaba.fastjson.JSON;
+import com.supbank.util.ResponseUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -35,25 +37,23 @@ public class UserController {
 	@PostMapping("/sendCode")
 	public String sendCode(HttpServletRequest request, @RequestBody DataRow params) {
 		DataRow result = new DataRow();
-		
+
 		String code = EmailUtil.generateCode();
 		System.out.println(code);
 		String address = params.getString("email");
 		boolean isSend = EmailUtil.sendEmail(address, code);
 
 		if(isSend) {
-			result.put("status", 0);
-		
+			result.put("status", ResponseUtils.returnSuccessMessage());
 			HttpSession session = request.getSession();
 			JSONObject jsonobj = new JSONObject();
 			jsonobj.put("code", code);
 			jsonobj.put("timestamp", System.currentTimeMillis());
 			session.setAttribute("verifyCode", jsonobj);
 		}else {
-			result.put("status", 1);
-			result.put("errorMessage", "send verifyCode failed");
+			result.put("status", ResponseUtils.returnErrorMessage("send verifyCode failed"));
 		}
-		return JsonUtil.resultJsonString(result);
+		return JSON.toJSONString(result);
 	}
 	
 	
@@ -70,7 +70,7 @@ public class UserController {
 	public String registerUser(HttpServletRequest request, @RequestBody DataRow<String,String> params) {
 		DataRow result = null;
 		result = userService.registerUser(request, params);
-		return JsonUtil.resultJsonString(result);
+		return JSON.toJSONString(result);
 	}
 	
 	
@@ -86,24 +86,10 @@ public class UserController {
 	public String userLogin(HttpServletRequest request, @RequestBody DataRow<String,String> params) {
 		DataRow result = null;
 		result = userService.login(request, params);
-		return JsonUtil.resultJsonString(result);
+		return JSON.toJSONString(result);
 	}
 	
-	
-	
-	/**
-	 * 获取当前用户余额
-	 * @param request
-	 * @return
-	 */
-	@CrossOrigin
-	@ResponseBody
-	@PostMapping("/getBalance")
-	public String getBalance(HttpServletRequest request) {
-		DataRow result = null;
-		result = userService.getBalance(request);
-		return JsonUtil.resultJsonString(result);
-	}
+
 	
 	
 	

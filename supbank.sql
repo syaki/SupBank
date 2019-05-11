@@ -21,7 +21,8 @@ USE `supbank`;
 DROP TABLE IF EXISTS `td_block`;
 
 CREATE TABLE `td_block` (
-  `hash` varchar(255) NOT NULL COMMENT '，主键，唯一标识本区块的哈希值',
+  `blockid` varchar(255) NOT NULL COMMENT '主键',
+  `hash` varchar(255) default NULL COMMENT '本区块的哈希值',
   `height` int(11) default NULL COMMENT '区块高度',
   `prehash` varchar(255) default NULL COMMENT '上一区块的哈希值',
   `merkleroothash` varchar(255) default NULL COMMENT '本区块的MerkleRoot',
@@ -34,15 +35,15 @@ CREATE TABLE `td_block` (
   `timestamp` timestamp NULL default NULL,
   `islegal` int(11) default NULL COMMENT '区块是否合法',
   `flag` int(11) default '1' COMMENT '状态 0：不可用 1：可用',
-  PRIMARY KEY  (`hash`)
+  PRIMARY KEY  (`blockid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 /*Data for the table `td_block` */
 
-insert  into `td_block`(`hash`,`height`,`prehash`,`merkleroothash`,`transactionnumber`,`nonce`,`blockreward`,`age`,`miner`,`size`,`timestamp`,`islegal`,`flag`) values 
-('255',8,NULL,NULL,5,NULL,NULL,9,'KONG',220,NULL,1,1),
-('569gjk',1,'255',NULL,8,NULL,NULL,7,'Wei',123,NULL,1,1),
-('852dcv',2,'569gjk',NULL,2,NULL,NULL,3,'jia',452,NULL,1,1);
+insert  into `td_block`(`blockid`,`hash`,`height`,`prehash`,`merkleroothash`,`transactionnumber`,`nonce`,`blockreward`,`age`,`miner`,`size`,`timestamp`,`islegal`,`flag`) values 
+('123456','asdf',1,NULL,'qwe',1,56,2,23,'kong',20,'2019-05-11 17:13:59',1,1),
+('2222222','zczczcv',3,'wqerqte','zv',NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1),
+('789999','wqerqte',2,'asdf','(NULL)xzcc',3,234,2,34,'weijia',34,'2019-05-11 21:13:00',1,1);
 
 /*Table structure for table `td_transaction` */
 
@@ -55,7 +56,7 @@ CREATE TABLE `td_transaction` (
   `sum` double default NULL COMMENT '交易金额',
   `signature` varchar(255) default NULL COMMENT '签名',
   `blockid` varchar(255) default NULL COMMENT '所在区块id',
-  `timestamp` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
+  `timestamp` timestamp NULL default NULL,
   `status` int(11) default NULL COMMENT '1:未验证  2:已验证',
   `flag` int(11) default '1' COMMENT '状态 0：不可用 1：可用',
   PRIMARY KEY  (`transactionid`)
@@ -64,7 +65,9 @@ CREATE TABLE `td_transaction` (
 /*Data for the table `td_transaction` */
 
 insert  into `td_transaction`(`transactionid`,`input`,`output`,`sum`,`signature`,`blockid`,`timestamp`,`status`,`flag`) values 
-('1904271708530001','2187e984a6c38cc35830e139e9ac2ba29ab32476','56aa8b2fd3c2109f598ae37ccc3dd19173d60497',10,'EOYVo0GEOtAXyFz9HmUEYbZ3UBAAhnnp4DBBqT9BI4RTFKFFjqgPRCUfd8dwuzzyRzfwfzTV1r2f\n2Fd1YS4REFyUib6n+H4crYtasqL6zaIsw14hXNDwUqDWFXzBwjNV2dAP4X7DpZo9PLN2Ayo2YpZb\nLGE+o0dkXroGsH5E5fY=','','2019-04-27 17:38:27',1,1);
+('1904271708530001','2187e984a6c38cc35830e139e9ac2ba29ab32476','56aa8b2fd3c2109f598ae37ccc3dd19173d60497',10,'EOYVo0GEOtAXyFz9HmUEYbZ3UBAAhnnp4DBBqT9BI4RTFKFFjqgPRCUfd8dwuzzyRzfwfzTV1r2f\n2Fd1YS4REFyUib6n+H4crYtasqL6zaIsw14hXNDwUqDWFXzBwjNV2dAP4X7DpZo9PLN2Ayo2YpZb\nLGE+o0dkXroGsH5E5fY=','ere','2019-05-11 20:59:48',1,1),
+('1905112051190001','sdfassdf','weereter',30,'qianming_dfsdf','dfa','2019-05-11 20:59:52',1,1),
+('4561215615613213','2187e984a6c38cc35830e139e9ac2ba29ab32476','56aa8b2fd3c2109f598ae37ccc3dd19173d60497',20,'(NULL)EOYVo0GEOtAXyFz9HmUEYbZ3UBAAhnnp4DBBqT9BI4RTFKFFjqgPRCUfd8dwuzzyRzfwfzTV1r2f\n2Fd1YS4REFyUib6n+H4crYtasqL6zaIsw14hXNDwUqDWFXzBwjNV2dAP4X7DpZo9PLN2Ayo2YpZb\nLGE+o0dkXroGsH5E5fY=','(NULsdfaL)','2019-05-11 21:00:02',1,1);
 
 /*Table structure for table `td_user` */
 
@@ -74,13 +77,11 @@ CREATE TABLE `td_user` (
   `userid` varchar(255) NOT NULL COMMENT '主键，唯一标识',
   `username` varchar(255) default NULL COMMENT '用户名',
   `password` varchar(255) default NULL COMMENT '密码',
-  `walletid` varchar(255) default NULL COMMENT '钱包id',
   `firstname` varchar(255) default NULL,
   `lastname` varchar(255) default NULL,
   `sex` varchar(20) default NULL,
   `email` varchar(255) default NULL,
   `phonenumber` varchar(30) default NULL,
-  `accouttype` int(11) default NULL COMMENT '0: email, 1: facebook & 2: google',
   `timestamp` timestamp NULL default NULL,
   `flag` int(11) default '1',
   PRIMARY KEY  (`userid`)
@@ -88,9 +89,11 @@ CREATE TABLE `td_user` (
 
 /*Data for the table `td_user` */
 
-insert  into `td_user`(`userid`,`username`,`password`,`walletid`,`firstname`,`lastname`,`sex`,`email`,`phonenumber`,`accouttype`,`timestamp`,`flag`) values 
-('1904211506550002','kwjia','5aa5ef5a12f017ea68d96800e6c0e23b','1904211506530001',NULL,NULL,NULL,'1138500436@qq.com',NULL,0,NULL,1),
-('1904211845090003','J','5aa5ef5a12f017ea68d96800e6c0e23b','1904211845090004',NULL,NULL,NULL,'302589689@qq.com',NULL,0,NULL,1);
+insert  into `td_user`(`userid`,`username`,`password`,`firstname`,`lastname`,`sex`,`email`,`phonenumber`,`timestamp`,`flag`) values 
+('1904211506550002','kwjia','5aa5ef5a12f017ea68d96800e6c0e23b',NULL,NULL,NULL,'1138500436@qq.com',NULL,NULL,1),
+('1904211845090003','J','5aa5ef5a12f017ea68d96800e6c0e23b',NULL,NULL,NULL,'302589689@qq.com',NULL,NULL,1),
+('1905062024480002','admin','5aa5ef5a12f017ea68d96800e6c0e23b',NULL,NULL,NULL,'8965500436@qq.com',NULL,NULL,1),
+('1905112057540004','Jia','5aa5ef5a12f017ea68d96800e6c0e23b',NULL,NULL,NULL,'113850036@qq.com',NULL,NULL,1);
 
 /*Table structure for table `td_wallet` */
 
@@ -98,9 +101,9 @@ DROP TABLE IF EXISTS `td_wallet`;
 
 CREATE TABLE `td_wallet` (
   `walletid` varchar(255) NOT NULL COMMENT '主键',
-  `address` longtext COMMENT '地址',
-  `publicKey` longtext COMMENT '公钥',
-  `privateKey` longtext COMMENT '私钥',
+  `address` varchar(255) default NULL COMMENT '地址',
+  `publicKey` varchar(255) default NULL COMMENT '公钥',
+  `password` varchar(255) default NULL COMMENT '每次请求用到的密码',
   `balance` double default NULL COMMENT '余额',
   `flag` int(11) default '1',
   PRIMARY KEY  (`walletid`)
@@ -108,9 +111,10 @@ CREATE TABLE `td_wallet` (
 
 /*Data for the table `td_wallet` */
 
-insert  into `td_wallet`(`walletid`,`address`,`publicKey`,`privateKey`,`balance`,`flag`) values 
-('1904211506530001','2187e984a6c38cc35830e139e9ac2ba29ab32476','MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCd0ko/baDps8o1uyd5bL0JTFmyCg/+OfkHEQBP\nakZKabfUYfgR2AQOm25+JLAAv27DRZrbucpCDoKH/YHeSE8vTT6hNZTHW+nN3M0/QKcK6xP8NZDs\n0BbTytzixBn/P/Pqy0wdG6av3xi1/i9G5v1XneoYeATUwXG0q1SnWEA1OQIDAQAB','MIICdgIBADANBgkqhkiG9w0BAQEFAASCAmAwggJcAgEAAoGBAJ3SSj9toOmzyjW7J3lsvQlMWbIK\nD/45+QcRAE9qRkppt9Rh+BHYBA6bbn4ksAC/bsNFmtu5ykIOgof9gd5ITy9NPqE1lMdb6c3czT9A\npwrrE/w1kOzQFtPK3OLEGf8/8+rLTB0bpq/fGLX+L0bm/Ved6hh4BNTBcbSrVKdYQDU5AgMBAAEC\ngYBbU2krsyC+nA+TcC2zkj0BuHDfGfuPPbThZfEsA2+ReAOsntSSXtJaMY+K52gBxsUtsoWeSLDF\n8OeQEh6opmdLJ+79bXdxy6gWm3LZDN9J/wrdTan7MSaz2mvshy5esVR7HTU5qBmoIx4ZiFr/GiIQ\n8bIOPZKNA+l1upVzn5+sEQJBAO68OV8GrvsffvUB67oaoH3qI9FzM5j1z1PoFWlDi/YzxkPiLwsI\nX6XaPE9IRBlcbX9eGNHkyWXkFqBABvjZKhsCQQCpPBW5ToMRCuFWRibyvZ6vci37Wwmvby38NaO5\nifhFmRGW7/IGcYsip+JgwcCyPcWPoqc40XrbTpXH02BRcpM7AkEAvlOhCXkyl1IMzRey7rO7r6ay\n15CYWiHeIG6uYzVOqAGu1v/DsXADkR3jZvGeGPnu8dP6xZs4VNr6jtd8t3eqcQJAZq0vuPgriSGC\nyedSJiBpsKSjxUbcv3XC/qxEo4NUAFX4WA1IWCR3eBVHwdCL6xiTTqwurMhbs8cgFNboL0JGlQJA\nKqlWUMKKpB2qC0SghLFji6ZRUrIKhs1HBSqnA3iHZUI56vTn/hxk/CENGASzvBxkn7jJeCYnTLi4\n5P6zPb6pQQ==',30,1),
-('1904211845090004','56aa8b2fd3c2109f598ae37ccc3dd19173d60497','MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCif/rqUFvYUxqhdw8mxOSrdmGeGC+YI8QgDcRi\nSRF0EwTSEngZEp33syPSOhW5oNhcIBAup7Qb9VSz4eLgZdzNdP8P3q69H7+jSdJjN/M7P1vgYpI9\n6nti+ltJT1V2MXJiHejqQtP8uH7WBS2JGUDDdM5cr+QfxsBPB4Cr4zvJnwIDAQAB','MIICdgIBADANBgkqhkiG9w0BAQEFAASCAmAwggJcAgEAAoGBAKJ/+upQW9hTGqF3DybE5Kt2YZ4Y\nL5gjxCANxGJJEXQTBNISeBkSnfezI9I6Fbmg2FwgEC6ntBv1VLPh4uBl3M10/w/err0fv6NJ0mM3\n8zs/W+Bikj3qe2L6W0lPVXYxcmId6OpC0/y4ftYFLYkZQMN0zlyv5B/GwE8HgKvjO8mfAgMBAAEC\ngYEAmQGANNhtYob9cEM2lP6XgYr5525Ggi5LIRNVcmXydSTjSRny00jgTLb0Z6IhiqOUlUnrcsKd\nqCWcF7P9d+TxvU0/zKsxBBbIr+O/V4FH51VlKlKq0i2NkciWhnCvhkOmvJQS9066l81HfcNkSHrZ\ncWt4/o5n/zKPM2zctKvi9EECQQDyNvIwunnzwGBZfD0l53GMRbSWcddn/xTcFv1vVz/k/5olWciy\nAqVJ2H/J4wRJu+686YjDsVx8LyKAzF3KtasnAkEAq7+YWT/8Lq6ipyAv7McaAq/zk55H+YR0qGV0\nrv+ggWWFd0qh6lpEXa0+eSVl3apy9SZiJ5ygsrxtT1yhkAVYyQJAHGcPDWHAjTHA2p1z+i7ipMVD\nwOSGkt5ZjtlvTJAZoPvMEpctrpoa0cb+bSkexpqwCx0DeZchtjo8vIe6c9vLvwJAb7MBI3Kg0b+U\nW3tsj+MBwKOsl+JGTzpdILQzSilIuz9KqUXpvmAMvJwS2HmBIcRcVaIsDjUosnYn5YiKLv+7OQJA\nA6mZPbZXL3WKCXnNqA48+HOvvlkACJ2fjDFbPUkrUlMhW2JvX00n9ndd3DuuWWvZI1FCxKdFyV6l\nYFqez7xV3A==',45,1);
+insert  into `td_wallet`(`walletid`,`address`,`publicKey`,`password`,`balance`,`flag`) values 
+('1904211506530001','2187e984a6c38cc35830e139e9ac2ba29ab32476','MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCd0ko/baDps8o1uyd5bL0JTFmyCg/+OfkHEQBP\nakZKabfUYfgR2AQOm25+JLAAv27DRZrbucpCDoKH/YHeSE8vTT6hNZTHW+nN3M0/QKcK6xP8NZDs\n0BbTytzixBn/P/Pqy0wdG6av3xi1/i9G5v1XneoYeATUwXG0q1SnWEA1OQIDAQAB',NULL,30,1),
+('1904211845090004','56aa8b2fd3c2109f598ae37ccc3dd19173d60497','MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCif/rqUFvYUxqhdw8mxOSrdmGeGC+YI8QgDcRi\nSRF0EwTSEngZEp33syPSOhW5oNhcIBAup7Qb9VSz4eLgZdzNdP8P3q69H7+jSdJjN/M7P1vgYpI9\n6nti+ltJT1V2MXJiHejqQtP8uH7WBS2JGUDDdM5cr+QfxsBPB4Cr4zvJnwIDAQAB',NULL,45,1),
+('1905062024480003','2876c0a31138ea3029b9aa4b7ae977ee4fb02bf5','MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCbdj69Ikfqlp8jLfavG2G3s4AuTX/Ajn62iw3Nvb1Um7KfNJ7fjzaBSQOBscg7eGBj6coO6X/6xYTdyv74IWpF9Itn/1/gRmNpj+DeiAz/lYLBoZWQcdfNNgLiTtpwfjSqtGT70j1Y9l+2FgRKMGJ0XVHOrsuXNzaDX+UadWTRIQIDAQAB',NULL,0,1);
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;

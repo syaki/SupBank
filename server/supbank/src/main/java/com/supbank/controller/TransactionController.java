@@ -2,6 +2,7 @@ package com.supbank.controller;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.alibaba.fastjson.JSON;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -38,47 +39,7 @@ public class TransactionController {
 	public String getTransactionInfo(HttpServletRequest request, @RequestBody DataRow<String,String> params) {
 		DataRow result = null;
 		result = transactionService.getTransactionInfoById(request, params);
-		return JsonUtil.resultJsonString(result);
-	}
-	
-	
-	/**
-	 * 产生交易
-	 * @param request
-	 * @param params
-	 * @return
-	 */
-	@CrossOrigin
-	@ResponseBody
-	@PostMapping("/transfer")
-	public String createTransaction(HttpServletRequest request, @RequestBody DataRow<String,String> params) {
-		DataRow result = transactionService.generateTransaction(request, params);
-		return JsonUtil.resultJsonString(result);
-	}
-	
-	
-	
-	
-	/**
-	 * 查询用户自己近期交易
-	 * @param request
-	 * @return
-	 */
-	@CrossOrigin
-	@ResponseBody
-	@PostMapping("/recentTx")
-	public String queryRecentTransaction(HttpServletRequest request) {
-		DataRow result = transactionService.getRecentTransactions(request);
-		return JsonUtil.resultJsonString(result);
-	}
-	
-	
-	@CrossOrigin
-	@ResponseBody
-	@PostMapping("/verify")
-	public String verifyTx() {
-		DataRow result = transactionService.txVerifyAndEditBalance("1904271708530001", "test_blockid");
-		return JsonUtil.resultJsonString(result);
+		return JSON.toJSONString(result);
 	}
 	
 	

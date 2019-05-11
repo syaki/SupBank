@@ -5,6 +5,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import com.supbank.util.ResponseUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -35,29 +36,26 @@ public class UserService {
 	 */
 	public DataRow registerUser(HttpServletRequest request, DataRow params) {
 		DataRow result = new DataRow<>();
-	
+
 		String code = params.getString("verificationCode");
 		HttpSession session = request.getSession();
 		JSONObject jsonobj = (JSONObject)session.getAttribute("verifyCode");
 
 		if(jsonobj==null) {
-			result.put("errorMessage", "verifyCode expire");
-			result.put("status", 1);
-			result.put("errorStatus", 0);
+
+			result.put("status", ResponseUtils.returnErrorMessage("verifyCode expire"));
 			return result;
 		}
 		
 		if(!jsonobj.getString("code").equals(code)) {
-			result.put("errorMessage", "verifyCode error");
-			result.put("status", 1);
-			result.put("errorStatus", 0);
+
+			result.put("status",ResponseUtils.returnErrorMessage("verifyCode error"));
 			return result;
 		}
 		
 		if((System.currentTimeMillis() - jsonobj.getLong("timestamp")) >= 5*60*1000) {
-			result.put("errorMessage", "verifyCode expire");
-			result.put("status", 1);
-			result.put("errorStatus", 0);
+
+			result.put("status", ResponseUtils.returnErrorMessage("verifyCode expire"));
 			return result;
 		}
 		
@@ -69,13 +67,13 @@ public class UserService {
 		String username = params.getString("username");
 		String password = MD5Util.makeMD5(params.getString("password"));
 		String email = params.getString("email");
-		int accouttype = params.getInt("accoutType");
+//		int accouttype = params.getInt("accoutType");
 		data.put("userid", userid);
 		
 		data.put("username", username);
 		data.put("password", password);
 		data.put("email", email);
-		data.put("accouttype", accouttype);
+//		data.put("accouttype", accouttype);
 		
 		String sql1 = "select * from td_user where username='"+username+"' and flag=1";
 		String sql2 = "select * from td_user where email='"+email+"' and flag=1";
@@ -83,39 +81,33 @@ public class UserService {
 		List<DataRow> emailList = dbService.queryForList(sql2);
 		if(usernameList.isEmpty()&&emailList.isEmpty()) {
 			//创建钱包
-			DataRow wallet_result = walletService.createWallet();
-			if(wallet_result.getInt("flag")==1) {
-				result.put("errorMessage", "create wallet failed");
-				result.put("errorStatus",4);
-				result.put("status", 1);
-				return result;
-			}
-			String walletid = wallet_result.getString("walletid");
-			data.put("walletid", walletid);
+//			DataRow wallet_result = walletService.createWallet();
+//			if(wallet_result.getInt("flag")==1) {
+//				result.put("errorMessage", "create wallet failed");
+//				result.put("errorStatus",4);
+//				result.put("status", 1);
+//				return result;
+//			}
+//			String walletid = wallet_result.getString("walletid");
+//			data.put("walletid", walletid);
 			try {
 				dbService.Insert("td_user", data);
 			} catch (Exception e) {
-				result.put("errorMessage", "create user failed");
-				result.put("status", 1);
-				result.put("errorStatus",4);
+				result.put("status", ResponseUtils.returnErrorMessage("create user failed"));
 				e.printStackTrace();
 				return result;
 			}
-			result.put("status", 0);
-			result.put("successMessage", "create user success");
-			result.put("walletInfor", wallet_result);
+
+			result.put("status", ResponseUtils.returnSuccessMessage());
+//			result.put("walletInfor", wallet_result);
 			return result;
 		}else {
 			if(!usernameList.isEmpty()) {
-				result.put("errorMessage", "username has existed");
-				result.put("status", 1);
-				result.put("errorStatus",1);
+				result.put("status", ResponseUtils.returnErrorMessage("username has existed"));
 				return result;
 			}
 			if(!emailList.isEmpty()) {
-				result.put("errorMessage", "email has been registed");
-				result.put("status", 1);
-				result.put("errorStatus",2);
+				result.put("status", ResponseUtils.returnErrorMessage("email has been registered"));
 				return result;
 			}
 			
@@ -136,26 +128,22 @@ public class UserService {
 	 */
 	public DataRow login(HttpServletRequest request, DataRow params) {
 		DataRow result = new DataRow();
+
 		String username = params.getString("username");
 		String password = params.getString("password");
 		String sql1 = "select username from td_user where username='"+username+"' and flag=1";
 		String sql2 = "select * from td_user where username='"+username+"' and password='"+MD5Util.makeMD5(password)+"' and flag=1";
 		List<DataRow> usernameList = dbService.queryForList(sql1);
 		if(usernameList.isEmpty()) {
-			result.put("status", 1);
-			result.put("errorStatus", 0);
-			result.put("errorMessage", "username error");
+			result.put("status", ResponseUtils.returnErrorMessage("username error"));
 			return result;
 		}
 		List<DataRow> user = dbService.queryForList(sql2);
 		if(user.isEmpty()) {
-			result.put("status", 1);
-			result.put("errorStatus", 1);
-			result.put("errorMessage", "password error");
+			result.put("status", ResponseUtils.returnErrorMessage("password error"));
 			return result;
 		}else {
-			result.put("status", 0);
-			result.put("successMessage", "login success");
+			result.put("status", ResponseUtils.returnSuccessMessage());
 			request.getSession().setAttribute("username", username);
 			return result;
 		}
@@ -164,32 +152,7 @@ public class UserService {
 	}
 	
 	
-	/**
-	 * 获取当前用户余额
-	 * @param request
-	 * @return
-	 */
-	public DataRow getBalance(HttpServletRequest request) {
-		DataRow result = new DataRow();
-		String username = request.getSession().getAttribute("username").toString();
-		if(null==username||("").equals(username)) {
-			result.put("status", 1);
-			result.put("errorMessage", "session expired");
-			return result;
-		}
-		String sql = "SELECT a.balance FROM td_wallet a, td_user b WHERE a.flag=1 AND b.flag=1 AND b.username='"+username+"' AND a.walletid=b.walletid";
-		try {
-			DataRow value = dbService.querySimpleRowBySql(sql);
-			result.put("status", 0);
-			result.put("successMessage", "getBalance success");
-			result.put("balance", value.getInt("balance"));
-		} catch (Exception e) {
-			result.put("status", 1);
-			result.put("errorMessage", "getBalance error");
-			e.printStackTrace();
-		}
-		return result;
-	}
+
 	
 	
 	
