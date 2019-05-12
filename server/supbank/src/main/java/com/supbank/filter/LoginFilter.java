@@ -15,6 +15,8 @@ public class LoginFilter implements Filter {
         HttpServletRequest request = (HttpServletRequest) req;
         HttpServletResponse response = (HttpServletResponse) resp;
         String requestUrl = request.getRequestURI();
+
+
         if(requestUrl.indexOf("user/")==-1) {
 
             if(requestUrl.indexOf("wallet/") > -1){
@@ -24,9 +26,11 @@ public class LoginFilter implements Filter {
 
             if(null==request.getSession().getAttribute("username")||("").equals(request.getSession().getAttribute("username"))){
                 //返回未登录
-                request.getRequestDispatcher("/failed").forward(request,response);
+                request.getRequestDispatcher("/failed/expired").forward(request,response);
                 return;
             }
+
+
         }
 
 
