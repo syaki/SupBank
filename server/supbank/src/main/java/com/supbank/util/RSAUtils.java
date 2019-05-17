@@ -87,7 +87,7 @@ public class RSAUtils {
         RSAPublicKey publicKey = (RSAPublicKey) keyPair.getPublic();
         RSAPrivateKey privateKey = (RSAPrivateKey) keyPair.getPrivate();
         String address = RipeMD160Util.encodeRipeMD160Hex(SHA256Util.SHA256(Base64.encodeBase64String(publicKey.getEncoded())).getBytes());
-        Map<String, Object> keyMap = new HashMap<String, Object>(2);
+        Map<String, Object> keyMap = new HashMap<String, Object>(3);
         keyMap.put(PUBLIC_KEY, publicKey);
         keyMap.put(PRIVATE_KEY, privateKey);
         keyMap.put("address", address);

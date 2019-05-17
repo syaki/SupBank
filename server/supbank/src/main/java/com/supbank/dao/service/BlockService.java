@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.supbank.util.ResponseUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,14 +35,14 @@ public class BlockService {
 	 */
 	public DataRow getBlockInfoById(HttpServletRequest request, DataRow params) {
 		DataRow result = new DataRow();
-		String hash = params.getString("hash");
-		String sql = "select * from td_block where flag=1 and hash='"+hash+"'";
+		String id = params.getString("id");
+		String sql = "select * from td_block where flag=1 and blockid='"+id+"'";
 		List<DataRow> blockList = dbService.queryForList(sql);
 		if(blockList.isEmpty()) {
-			result.put("status", 1);
-			result.put("errorMessage", "0 result");
+			result.put("status", ResponseUtils.returnErrorMessage("this block is not exist"));
+
 		}else {
-			result.put("status", 0);
+			result.put("status", ResponseUtils.returnSuccessMessage());
 			result.put("blockList", blockList);
 		}
 		return result;
@@ -52,17 +53,24 @@ public class BlockService {
 	 * @param request
 	 * @return
 	 */
-	public DataRow getLongestLegalChain(HttpServletRequest request) {
+	public DataRow getLongestLegalChain(HttpServletRequest request, DataRow params) {
 		DataRow result = new DataRow();
-		List<DataRow> heightestBlockList = dbService.queryForList("select hash,prehash,height,age,transactionnumber,miner,size from td_block where flag=1 and islegal=1 and height =(select max(height) from td_block)");
+		List<DataRow> heightestBlockList = dbService.queryForList("select blockid,height,hash,prehash,merkleroothash,nonce,blockreward,transactionnumber,miner from td_block where flag=1 and islegal=1 and height =(select max(height) from td_block where flag=1 and islegal=1)");
 
 		List<DataRow> longestLegalChain = new ArrayList<DataRow>();
+		int pageNumber = params.getInt("pageNumber");
+
+
+		int pageSize = 5;
+
+
 		for (DataRow dataRow : heightestBlockList) {
 
 			do {
 				longestLegalChain.add(dataRow);
+
 				String prehash = dataRow.getString("prehash");
-				String sql = "select hash,prehash,height,age,transactionnumber,miner,size from td_block where flag=1 and islegal=1 and hash='"
+				String sql = "select blockid,height,hash,prehash,merkleroothash,nonce,blockreward,transactionnumber,miner from td_block where flag=1 and islegal=1 and hash='"
 						+ prehash + "'";
 				try {
 					dataRow = dbService.querySimpleRowBySql(sql);
@@ -75,9 +83,23 @@ public class BlockService {
 				} 
 			} while (dataRow.getString("prehash")!=null);
 		}
-		
-		result.put("status", 0);
-		result.put("longestLegalChain", longestLegalChain);
+		if(longestLegalChain.size()<pageSize){
+			result.put("status", ResponseUtils.returnSuccessMessage());
+			result.put("longestLegalChain", longestLegalChain);
+			return result;
+		}
+		if(longestLegalChain.size()>=pageNumber*pageSize){
+			result.put("status", ResponseUtils.returnSuccessMessage());
+			result.put("longestLegalChain", longestLegalChain.subList((pageNumber - 1)*pageSize, pageNumber*pageSize));
+			return result;
+		}
+		if(longestLegalChain.size()<pageNumber*pageSize){
+			result.put("status", ResponseUtils.returnSuccessMessage());
+			result.put("longestLegalChain", longestLegalChain.subList((pageNumber - 1)*pageSize, longestLegalChain.size()));
+			return result;
+		}
+
+
 		
 		return result;
 		

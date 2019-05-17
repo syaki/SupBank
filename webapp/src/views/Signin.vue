@@ -56,17 +56,18 @@ export default {
       }
     },
     requestSignin: function(id, pw) {
-      var self = this;
+      let self = this;
       pw = self.$fnv.hash(pw, 64).str();
       this.$axios({
         method: 'post',
-        url: '/api/signin',
+        url: '//39.105.83.9:8990/user/login',
         data: {
-          emailaddress: id,
+          loginType: 0,
+          username: id,
           password: pw,
         },
       })
-        .then(response => {
+        .then((response) => {
           let data = response.data;
           if (data.ack === 'success') {
             localStorage.setItem('token', data.data.token);
@@ -78,7 +79,7 @@ export default {
             alert(data.data.msg);
           }
         })
-        .catch(error => {
+        .catch((error) => {
           alert(error);
         });
     },

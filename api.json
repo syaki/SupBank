@@ -1,170 +1,168 @@
 {
-  "sign_up": {
-    "url": "/api/sign_up",
-    "tpye": "post",
-    "request": {
-      "data": {
-        "emailaddress": "string",
-        "password": "string"
-      }
-    },
-    "response": {
-      "ack": "success || fail",
-      "data": {
-        "msg": "string"
-      }
-    }
-  },
-  "sign_in": {
-    "url": "/api/sign_in",
-    "tpye": "post",
-    "request": {
-      "data": {
-        "emailaddress": "string",
-        "password": "string"
-      }
-    },
-    "response": {
-      "ack": "success || fail",
-      "data": {
-        "token": "string",
-        "msg": "string"
-      }
-    }
-  },
-  "search": {
-    "url": "/api/searchTransaction",
-    "type": "get",
-    "request": {
-      "k": "string"
-    },
-    "response": {
-      "ack": "success || fail",
-      "data": {
-        "ack: success": {
-          "pages": "int",
-          "searchResultList": [
-            {
-              "amount": "float",
-              "transactionhash": "string",
-              "height": "int",
-              "timestamp": "string"
+    "To": "WebApp",
+    "method": "post",
+    "getVerificationCode": {
+        "url": "//39.105.83.9:8990/user/sendCode",
+        "request": {
+            "email": "string"
+        },
+        "response": {
+            "status": {
+                "Ack": "success || error",
+                "ErrorMessage": "string",
+                "Timestamp": "string"
             }
-          ]
-        },
-        "ack: fail": {
-          "msg": "string"
         }
-      }
-    }
-  },
-  "getBalance": {
-    "url": "/api/getBalance",
-    "type": "get",
-    "request": {
-      "data": {
-        "token": "string"
-      }
     },
-    "response": {
-      "ack": "success || fail",
-      "data": {
-        "ack: success": {
-          "balance": "float"
+    "register": {
+        "url": "//39.105.83.9:8990/user/register",
+        "request": {
+            "email": "string",
+            "username": "string",
+            "password": "string",
+            "verificationCode": "string"
         },
-        "ack: fail": {
-          "msg": "string"
-        }
-      }
-    }
-  },
-  "getTransactionList": {
-    "url": "/api/getTransactionList",
-    "type": "get",
-    "request": {
-      "data": {
-        "pageid": "int"
-      }
-    },
-    "response": {
-      "ack": "success || fail",
-      "data": {
-        "ack: success": {
-          "pages": "int",
-          "transactionList": [
-            {
-              "amount": "float",
-              "transactionhash": "string",
-              "height": "int",
-              "timestamp": "string"
+        "response": {
+            "status": {
+                "Ack": "success || error",
+                "ErrorMessage": "string",
+                "Timestamp": "string"
             }
-          ]
-        },
-        "ack: fail": {
-          "msg": "string"
         }
-      }
-    }
-  },
-  "getTransactionInfo": {
-    "url": "/api/getTransactionInfo",
-    "type": "get",
-    "request": {
-      "data": {
-        "transactionhash": "string"
-      }
     },
-    "response": {
-      "ack": "success || fail",
-      "data": {
-        "ack: success": {
-          "amount": "float",
-          "transactionhash": "string",
-          "height": "int",
-          "inputaddress": "string",
-          "outputaddress": "string",
-          "timestamp": "string"
+    "login": {
+        "url": "//39.105.83.9:8990/user/login",
+        "request": {
+            "username": "string",
+            "password": "string"
         },
-        "ack: fail": {
-          "msg": "string"
+        "response": {
+            "status": {
+                "Ack": "success || error",
+                "ErrorMessage": "string",
+                "Timestamp": "string"
+            }
         }
-      }
-    }
-  },
-  "getNodeList": {
-    "url": "/api/getgetNodeList",
-    "type": "get",
-    "request": {
-      "data": {}
     },
-    "response": {
-      "ack": "success || fail",
-      "data": {
-        "ack: success": {
-          "nodelist": [
-            {
-              "name": "node1",
-              "address": "string",
-              "children": [
+    "getLastTransaction": {
+        "url": "//39.105.83.9:8990/homePage/getLastTransaction",
+        "request": {},
+        "response": {
+            "status": {
+                "Ack": "success || error",
+                "ErrorMessage": "string",
+                "Timestamp": "string"
+            },
+            "lastTransactionData": [
                 {
-                  "name": "node1.1",
-                  "address": "string",
-                  "children": [
-                    {
-                      "name": "node1.1.1",
-                      "address": "string",
-                      "children": []
-                    }
-                  ]
+                    "length": 10
+                },
+                {
+                    "hash": "string",
+                    "height": "string",
+                    "nonce": "string",
+                    "timestamp": "string"
                 }
-              ]
-            }
-          ]
-        },
-        "ack: fail": {
-          "msg": "string"
+            ]
         }
-      }
+    },
+    "getTransactionData": {
+        "url": "//39.105.83.9:8990/transaction/getTransactionById",
+        "request": {
+            "transactionId": "string"
+        },
+        "response": {
+            "status": {
+                "Ack": "success || error",
+                "ErrorMessage": "string",
+                "Timestamp": "string"
+            },
+            "transactionData": {
+                "hash": "string",
+                "height": "string",
+                "nonce": "string",
+                "timestamp": "string",
+                "output": "string",
+                "input": "string",
+                "sum": "double"
+            }
+        }
+    },
+    "searchTransaction": {
+        "url": "//39.105.83.9:8990/search",
+        "request": {
+            "keyword": "string"
+        },
+        "response": {
+            "status": {
+                "Ack": "success || error",
+                "ErrorMessage": "string",
+                "Timestamp": "string"
+            },
+            "transactionList": [
+                {
+                    "hash": "string",
+                    "height": "string",
+                    "nonce": "string",
+                    "timestamp": "string"
+                }
+            ]
+        }
+    },
+    "statusPage": {
+        "url": "//39.105.83.9:8990/block/longestLegalChain",
+        "request": {
+            "pageNumber": "string"
+        },
+        "response": {
+            "status": {
+                "Ack": "success || error",
+                "ErrorMessage": "string",
+                "Timestamp": "string"
+            },
+            "BlockList": [
+                {
+                    "id": "int",
+                    "age": "int",
+                    "height": "int",
+                    "transactionNumber": "int",
+                    "miner": "string",
+                    "size": "double"
+                }
+            ]
+        }
+    },
+    "getBlockInfo": {
+        "url": "//39.105.83.9:8990/block/getBlockById",
+        "request": {
+            "id": "int"
+        },
+        "response": {
+            "status": {
+                "Ack": "success || error",
+                "ErrorMessage": "string",
+                "Timestamp": "string"
+            },
+            "BlockInfo": {
+                "id": "int",
+                "hash": "string",
+                "preHash": "string",
+                "MerkleRootHash": "string",
+                "transactionNumber": "int",
+                "height": "int",
+                "nonce": "int",
+                "blockReward": "double",
+                "BlockBody": {
+                    "Transactions": [
+                        {
+                            "timestamp": "string",
+                            "output": "string",
+                            "input": "string",
+                            "sum": "double"
+                        }
+                    ]
+                }
+            }
+        }
     }
-  }
 }

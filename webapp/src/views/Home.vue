@@ -50,7 +50,7 @@
                 <th>Nonce</th>
                 <th>Time</th>
               </tr>
-              <tr v-for="(t, k, i) in transactionList">
+              <tr v-for="t in transactionList" :key="t.id">
                 <td>{{t.height}}</td>
                 <td>{{t.hash}}</td>
                 <td>{{t.nonce}}</td>
@@ -81,7 +81,7 @@ export default {
   created() {
     this.$axios
       .get('/api/get_new_txs')
-      .then(response => {
+      .then((response) => {
         const data = response.data;
 
         if (data.ack === 'success') {
@@ -90,7 +90,7 @@ export default {
           alert(data.data.msg);
         }
       })
-      .catch(error => {
+      .catch((error) => {
         alert(error);
       });
   },
