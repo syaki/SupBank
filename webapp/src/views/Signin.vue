@@ -7,7 +7,8 @@
           <form action class="signinForm">
             <div class="formTitle">
               <span class="left">Welcome Back!</span>
-              <span class="right">or
+              <span class="right">
+                or
                 <router-link class="signup" to="/signup">Sign Up</router-link>
               </span>
             </div>
@@ -38,52 +39,58 @@
 
 <script>
 export default {
-  name: 'signin',
+  name: "signin",
   data() {
     return {
-      emailaddress: '',
-      password: '',
+      emailaddress: "",
+      password: ""
     };
   },
   methods: {
     signin: function() {
       if (this.emailaddress.length <= 0) {
-        alert('emailaddress error');
+        alert("emailaddress error");
       } else if (this.password.length < 6) {
-        alert('password error');
+        alert("password error");
       } else {
         this.requestSignin(this.emailaddress, this.password);
       }
     },
     requestSignin: function(id, pw) {
       let self = this;
-      pw = self.$fnv.hash(pw, 64).str();
+      // pw = self.$fnv.hash(pw, 64).str();
       this.$axios({
-        method: 'post',
-        url: '//39.105.83.9:8990/user/login',
+        method: "post",
+        url: "//39.105.83.9:8990/user/login",
         data: {
-          loginType: 0,
           username: id,
-          password: pw,
-        },
+          password: pw
+        }
       })
-        .then((response) => {
-          let data = response.data;
-          if (data.ack === 'success') {
-            localStorage.setItem('token', data.data.token);
-            localStorage.setItem('wallet_name', id);
+        .then(response => {
+          response = response.data;
+          // if (data.ack === "success") {
+          //   // localStorage.setItem("token", data.data.token);
+          //   // localStorage.setItem("wallet_name", id);
+          //   self.$router.push({
+          //     path: "/"
+          //   });
+          // } else {
+          //   alert(data.data.msg);
+          // }
+          if (response.status.Ack === "success") {
             self.$router.push({
-              path: '/',
+              path: "/"
             });
           } else {
-            alert(data.data.msg);
+            alert(response.status.ErrorMessage);
           }
         })
-        .catch((error) => {
+        .catch(error => {
           alert(error);
         });
-    },
-  },
+    }
+  }
 };
 </script>
 
@@ -169,7 +176,7 @@ export default {
   font-weight: 300;
   color: #545456;
   background-color: white;
-  font-family: 'Montserrat', Helvetica, sans-serif;
+  font-family: "Montserrat", Helvetica, sans-serif;
   background-image: none;
   outline-width: 0px;
   -moz-user-select: text;
