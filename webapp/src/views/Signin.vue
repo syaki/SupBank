@@ -58,10 +58,9 @@ export default {
     },
     requestSignin: function(id, pw) {
       let self = this;
-      // pw = self.$fnv.hash(pw, 64).str();
       this.$axios({
         method: "post",
-        url: "//39.105.83.9:8990/user/login",
+        url: "http://192.168.1.103:8990/user/login",
         data: {
           username: id,
           password: pw
@@ -69,16 +68,8 @@ export default {
       })
         .then(response => {
           response = response.data;
-          // if (data.ack === "success") {
-          //   // localStorage.setItem("token", data.data.token);
-          //   // localStorage.setItem("wallet_name", id);
-          //   self.$router.push({
-          //     path: "/"
-          //   });
-          // } else {
-          //   alert(data.data.msg);
-          // }
           if (response.status.Ack === "success") {
+            localStorage.setItem("wallet_name", id);
             self.$router.push({
               path: "/"
             });

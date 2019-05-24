@@ -4,7 +4,7 @@
     <main role="main">
       <div class="main-inner">
         <div class="signupCard card">
-          <form action class="signupForm">
+          <form class="signupForm" method="post">
             <div class="formTitle">
               <span class="left">Create your Wallet</span>
               <span class="right">
@@ -91,7 +91,7 @@ export default {
         var self = this;
         this.$axios({
           method: "post",
-          url: "//39.105.83.9:8990/user/sendCode",
+          url: "http://192.168.1.103:8990/user/sendCode",
           data: {
             email: self.emailAddress
           }
@@ -104,27 +104,17 @@ export default {
     },
     requestSignup: function(e, pw, vcode) {
       var self = this;
-      // pw = self.$fnv.hash(pw, 64).str();
       this.$axios({
         method: "post",
-        url: "//39.105.83.9:8990/user/register",
+        url: "http://192.168.1.103:8990/user/register",
         data: {
-          verificationCode: vcode,
-          username: self.username,
           email: e,
-          password: pw
+          username: self.username,
+          password: pw,
+          verificationCode: vcode
         }
       })
         .then(response => {
-          // let data = response.data;
-          // if (data.ack === "success") {
-          //   alert(data.data.msg);
-          //   self.$router.push({
-          //     path: "signin"
-          //   });
-          // } else {
-          //   alert(data.data.msg);
-          // }
           if (response.data.status.Ack === "success") {
             self.$router.push({
               path: "signin"

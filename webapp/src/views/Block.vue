@@ -1,27 +1,33 @@
 <template>
-  <div class="search">
+  <div class="block">
     <AppHeader/>
     <div class="main">
       <main role="main">
         <div class="main-inner">
-          <div class="transactionListCard card">
+          <div class="transactionCard card">
             <table class="listTable">
-              <caption>Search result:</caption>
+              <caption>Block detail:</caption>
               <tr>
-                <th>ID</th>
-                <th>Input</th>
-                <th>Output</th>
-                <th>Sum</th>
+                <td>BlockID:</td>
+                <td>{{blockInfo.blockid}}</td>
               </tr>
-              <tr
-                v-for="t in searchResultList"
-                :key="t.id"
-                v-on:click="getTransactionDetail(t.transactionid)"
-              >
+              <tr>
+                <td>Hash:</td>
+                <td>{{blockInfo.hash}}</td>
+              </tr>
+              <tr>
+                <td>Pre hash:</td>
+                <td>{{blockInfo.prehash}}</td>
+              </tr>
+              <tr>
+                <td>Height:</td>
+                <td>{{blockInfo.height}}</td>
+              </tr>
+              <tr>
+                <td>Transactions:</td>
+              </tr>
+              <tr v-for="t in txsList" :key="t.id" v-on:click="getTransactionDetail(t.transactionid)">
                 <td>{{t.transactionid}}</td>
-                <td>{{t.input}}</td>
-                <td>{{t.output}}</td>
-                <td>{{t.sum}}</td>
               </tr>
             </table>
           </div>
@@ -35,32 +41,33 @@
 import AppHeader from "@/components/AppHeader.vue";
 
 export default {
-  name: "search",
+  name: "block",
   components: {
     AppHeader
   },
   data() {
     return {
-      searchText: this.$route.query.q,
-      searchResultList: [],
-      pages: 1,
-      page: 1
+      id: this.$route.query.q,
+      blockInfo: {},
+      txsList: []
     };
   },
   created() {
-    const searchText = this.$route.query.q;
+    var that = this;
+    const id = this.$route.query.q;
 
     this.$axios({
       method: "post",
-      url: "http://192.168.1.103:8990/homePage/search",
+      url: "http://192.168.1.103:8990/block/getBlockById",
       data: {
-        keyword: searchText
+        id: id
       }
     })
       .then(response => {
         const data = response.data;
         if (data.status.Ack === "success") {
-          this.searchResultList = data.transactionList;
+          that.blockInfo = data.blockList[0];
+          that.txsList = data.transactionList;
         } else {
           alert(data.status.ErrorMessage);
         }

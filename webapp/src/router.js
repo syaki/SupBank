@@ -38,7 +38,7 @@ export default new Router({
       name: 'transaction',
       component: () => import('./views/Transaction.vue'),
       meta: {
-        title: 'transaction',
+        title: 'Transaction',
       },
     },
     {
@@ -47,6 +47,14 @@ export default new Router({
       component: () => import('./views/Search.vue'),
       meta: {
         title: 'Search',
+      },
+    },
+    {
+      path: '/block',
+      name: 'block',
+      component: () => import('./views/Block.vue'),
+      meta: {
+        title: 'Block',
       },
     },
   ],
