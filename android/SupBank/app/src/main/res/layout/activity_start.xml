@@ -6,17 +6,33 @@
     android:layout_height="match_parent"
     tools:context=".activity.StartActivity">
 
-    <Button
-        android:id="@+id/startApp"
-        android:layout_width="288dp"
-        android:layout_height="52dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        android:text="立即体验"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TableRow android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <ImageView
+                android:id="@+id/bg_img"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:srcCompat="@drawable/app_bg"
+                android:contentDescription="TODO" />
+        </TableRow>
+
+
+        <TableRow android:layout_width="match_parent">
+            <Button
+                android:id="@+id/startApp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Experience Now"
+                app:layout_constraintEnd_toStartOf="parent"/>
+        </TableRow>
+
+
+
+    </TableLayout>
+
 </android.support.constraint.ConstraintLayout>

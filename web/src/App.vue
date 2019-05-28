@@ -1,22 +1,27 @@
 <template>
   <div id="app">
-    <router-view/>
-    <AppFooter/>
+    <AppHeader />
+    <el-main>
+      <div class="main">
+        <router-view />
+      </div>
+    </el-main>
+    <AppFooter />
   </div>
 </template>
 
-<script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
-import AppFooter from '@/components/AppFooter.vue';
+<script>
+import AppHeader from "@/components/AppHeader.vue";
+import AppFooter from "@/components/AppFooter.vue";
 
-@Component({
+export default {
+  name: "app",
   components: {
-    AppFooter,
-  },
-})
-export default class Home extends Vue {}
+    AppHeader,
+    AppFooter
+  }
+};
 </script>
-
 
 <style>
 * {
@@ -31,23 +36,15 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   font-size: 15px;
-  color: #1a1a1a;
+  color: #606266;
   background: #f6f6f6;
 }
 
-a {
-  text-decoration: none;
-  cursor: pointer;
-  color: inherit;
-}
-
-button {
-  cursor: pointer;
-  outline: none;
-}
-
-input {
-  outline: none;
+.main {
+  position: relative;
+  width: 1000px;
+  padding: 0 16px;
+  margin: 0 auto;
 }
 
 .card {
@@ -55,28 +52,22 @@ input {
   background: #fff;
   overflow: hidden;
   border-radius: 2px;
-  -webkit-box-shadow: 0 1px 3px rgba(26, 26, 26, 0.2);
   box-shadow: 0 1px 3px rgba(26, 26, 26, 0.2);
-  -webkit-box-sizing: border-box;
   box-sizing: border-box;
   padding: 36px;
+  margin-bottom: 14px;
 }
 
-.icon {
-  vertical-align: text-bottom;
+.title {
   text-align: center;
+  font-size: 32px;
+  color: #409eff;
+  margin: 32px;
 }
 
-.dividerCol {
-  display: inline-block;
-  width: 1px;
-  margin: 0 8px;
-}
-
-.dividerRow {
-  width: 100%;
-  height: 1px;
-  background-color: rgb(204, 204, 204);
-  margin: 10px 0px;
+.title-2 {
+  margin: 26px;
+  font-size: 24px;
+  color: #606266;
 }
 </style>

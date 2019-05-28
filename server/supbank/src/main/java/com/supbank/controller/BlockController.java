@@ -2,6 +2,7 @@ package com.supbank.controller;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.alibaba.fastjson.JSON;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -34,7 +35,7 @@ public class BlockController {
 	public String getBlockInfo(HttpServletRequest request,@RequestBody DataRow<String,String> params) {
 		DataRow result = null;
 		result = blockService.getBlockInfoById(request, params);
-		return JsonUtil.resultJsonString(result);
+		return JSON.toJSONString(result);
 	}
 	
 	
@@ -46,10 +47,10 @@ public class BlockController {
 	@CrossOrigin
 	@ResponseBody
 	@PostMapping("/longestLegalChain")
-	public String getLongestLegalChain(HttpServletRequest request) {
+	public String getLongestLegalChain(HttpServletRequest request, @RequestBody DataRow<String, String> params) {
 		DataRow result = null;
-		result = blockService.getLongestLegalChain(request);
-		return JsonUtil.resultJsonString(result);
+		result = blockService.getLongestLegalChain(request, params);
+		return JSON.toJSONString(result);
 	}
 	
 	

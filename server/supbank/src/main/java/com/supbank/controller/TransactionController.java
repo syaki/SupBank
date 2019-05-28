@@ -2,6 +2,7 @@ package com.supbank.controller;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.alibaba.fastjson.JSON;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -38,7 +39,12 @@ public class TransactionController {
 	public String getTransactionInfo(HttpServletRequest request, @RequestBody DataRow<String,String> params) {
 		DataRow result = null;
 		result = transactionService.getTransactionInfoById(request, params);
-		return JsonUtil.resultJsonString(result);
+		return JSON.toJSONString(result);
 	}
+	
+	
+	
+	
+	
 	
 }
