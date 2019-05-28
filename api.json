@@ -1,168 +1,251 @@
-{
+[
+  {
     "To": "WebApp",
     "method": "post",
     "getVerificationCode": {
-        "url": "//39.105.83.9:8990/user/sendCode",
-        "request": {
-            "email": "string"
-        },
-        "response": {
-            "status": {
-                "Ack": "success || error",
-                "ErrorMessage": "string",
-                "Timestamp": "string"
-            }
+      "url": "//39.105.83.9:8990/user/sendCode",
+      "request": {
+        "email": "string"
+      },
+      "response": {
+        "status": {
+          "Ack": "success || error",
+          "ErrorMessage": "string",
+          "Timestamp": "string"
         }
+      }
     },
     "register": {
-        "url": "//39.105.83.9:8990/user/register",
-        "request": {
-            "email": "string",
-            "username": "string",
-            "password": "string",
-            "verificationCode": "string"
-        },
-        "response": {
-            "status": {
-                "Ack": "success || error",
-                "ErrorMessage": "string",
-                "Timestamp": "string"
-            }
+      "url": "//39.105.83.9:8990/user/register",
+      "request": {
+        "email": "string",
+        "username": "string",
+        "password": "string",
+        "verificationCode": "string"
+      },
+      "response": {
+        "status": {
+          "Ack": "success || error",
+          "ErrorMessage": "string",
+          "Timestamp": "string"
         }
+      }
     },
     "login": {
-        "url": "//39.105.83.9:8990/user/login",
-        "request": {
-            "username": "string",
-            "password": "string"
-        },
-        "response": {
-            "status": {
-                "Ack": "success || error",
-                "ErrorMessage": "string",
-                "Timestamp": "string"
-            }
+      "url": "//39.105.83.9:8990/user/login",
+      "request": {
+        "username": "string",
+        "password": "string"
+      },
+      "response": {
+        "status": {
+          "Ack": "success || error",
+          "ErrorMessage": "string",
+          "Timestamp": "string"
         }
+      }
     },
     "getLastTransaction": {
-        "url": "//39.105.83.9:8990/homePage/getLastTransaction",
-        "request": {},
-        "response": {
-            "status": {
-                "Ack": "success || error",
-                "ErrorMessage": "string",
-                "Timestamp": "string"
-            },
-            "lastTransactionData": [
-                {
-                    "length": 10
-                },
-                {
-                    "hash": "string",
-                    "height": "string",
-                    "nonce": "string",
-                    "timestamp": "string"
-                }
-            ]
-        }
+      "url": "//39.105.83.9:8990/homePage/getLastTransaction",
+      "request": {},
+      "response": {
+        "status": {
+          "Ack": "success || error",
+          "ErrorMessage": "string",
+          "Timestamp": "string"
+        },
+        "lastTransactionData": [
+          {
+            "length": 10
+          },
+          {
+            "hash": "string",
+            "height": "string",
+            "nonce": "string",
+            "timestamp": "string"
+          }
+        ]
+      }
     },
     "getTransactionData": {
-        "url": "//39.105.83.9:8990/transaction/getTransactionById",
-        "request": {
-            "transactionId": "string"
+      "url": "//39.105.83.9:8990/transaction/getTransactionById",
+      "request": {
+        "transactionId": "string"
+      },
+      "response": {
+        "status": {
+          "Ack": "success || error",
+          "ErrorMessage": "string",
+          "Timestamp": "string"
         },
-        "response": {
-            "status": {
-                "Ack": "success || error",
-                "ErrorMessage": "string",
-                "Timestamp": "string"
-            },
-            "transactionData": {
-                "hash": "string",
-                "height": "string",
-                "nonce": "string",
+        "transactionData": {
+          "hash": "string",
+          "height": "string",
+          "nonce": "string",
+          "timestamp": "string",
+          "output": "string",
+          "input": "string",
+          "sum": "double"
+        }
+      }
+    },
+    "searchTransaction": {
+      "url": "//39.105.83.9:8990/search",
+      "request": {
+        "keyword": "string"
+      },
+      "response": {
+        "status": {
+          "Ack": "success || error",
+          "ErrorMessage": "string",
+          "Timestamp": "string"
+        },
+        "transactionList": [
+          {
+            "hash": "string",
+            "height": "string",
+            "nonce": "string",
+            "timestamp": "string"
+          }
+        ]
+      }
+    },
+    "statusPage": {
+      "url": "//39.105.83.9:8990/block/longestLegalChain",
+      "request": {
+        "pageNumber": "string"
+      },
+      "response": {
+        "status": {
+          "Ack": "success || error",
+          "ErrorMessage": "string",
+          "Timestamp": "string"
+        },
+        "BlockList": [
+          {
+            "id": "int",
+            "age": "int",
+            "height": "int",
+            "transactionNumber": "int",
+            "miner": "string",
+            "size": "double"
+          }
+        ]
+      }
+    },
+    "getBlockInfo": {
+      "url": "//39.105.83.9:8990/block/getBlockById",
+      "request": {
+        "id": "int"
+      },
+      "response": {
+        "status": {
+          "Ack": "success || error",
+          "ErrorMessage": "string",
+          "Timestamp": "string"
+        },
+        "BlockInfo": {
+          "id": "int",
+          "hash": "string",
+          "preHash": "string",
+          "MerkleRootHash": "string",
+          "transactionNumber": "int",
+          "height": "int",
+          "nonce": "int",
+          "blockReward": "double",
+          "BlockBody": {
+            "Transactions": [
+              {
                 "timestamp": "string",
                 "output": "string",
                 "input": "string",
                 "sum": "double"
-            }
-        }
-    },
-    "searchTransaction": {
-        "url": "//39.105.83.9:8990/search",
-        "request": {
-            "keyword": "string"
-        },
-        "response": {
-            "status": {
-                "Ack": "success || error",
-                "ErrorMessage": "string",
-                "Timestamp": "string"
-            },
-            "transactionList": [
-                {
-                    "hash": "string",
-                    "height": "string",
-                    "nonce": "string",
-                    "timestamp": "string"
-                }
+              }
             ]
+          }
         }
-    },
-    "statusPage": {
-        "url": "//39.105.83.9:8990/block/longestLegalChain",
-        "request": {
-            "pageNumber": "string"
-        },
-        "response": {
-            "status": {
-                "Ack": "success || error",
-                "ErrorMessage": "string",
-                "Timestamp": "string"
-            },
-            "BlockList": [
-                {
-                    "id": "int",
-                    "age": "int",
-                    "height": "int",
-                    "transactionNumber": "int",
-                    "miner": "string",
-                    "size": "double"
-                }
-            ]
-        }
-    },
-    "getBlockInfo": {
-        "url": "//39.105.83.9:8990/block/getBlockById",
-        "request": {
-            "id": "int"
-        },
-        "response": {
-            "status": {
-                "Ack": "success || error",
-                "ErrorMessage": "string",
-                "Timestamp": "string"
-            },
-            "BlockInfo": {
-                "id": "int",
-                "hash": "string",
-                "preHash": "string",
-                "MerkleRootHash": "string",
-                "transactionNumber": "int",
-                "height": "int",
-                "nonce": "int",
-                "blockReward": "double",
-                "BlockBody": {
-                    "Transactions": [
-                        {
-                            "timestamp": "string",
-                            "output": "string",
-                            "input": "string",
-                            "sum": "double"
-                        }
-                    ]
-                }
-            }
-        }
+      }
     }
-}
+  },
+  {
+    "To": "WalletApp",
+    "DigMine挖矿": {
+      "url": "//ip:port/block/create",
+      "method": "post",
+      "request": {
+        "address": "string"
+      },
+      "response": {
+        "status": {
+          "Ack": "success || error",
+          "ErrorMessage": "string",
+          "Timestamp": "string"
+        }
+      },
+      "transfer": {
+        "url": "//ip:port/wallet/transfer",
+        "method": "post",
+        "request": {
+          "input": "string",
+          "output": "string",
+          "sum": "double",
+          "signature": "string",
+          "password": "string"
+        },
+        "response": {
+          "status": {
+            "Ack": "success || error",
+            "ErrorMessage": "string",
+            "Timestamp": "string"
+          }
+        }
+      },
+      "createWallet": {
+        "url": "//ip:port/wallet/create",
+        "method": "post",
+        "request": {
+          "address": "string",
+          "publicKey": "string",
+          "password": "string"
+        },
+        "response": {
+          "status": {
+            "Ack": "success||error",
+            "ErrorMessage": "string",
+            "Timestamp": "string"
+          }
+        }
+      },
+      "getRecentTransaction": {
+        "url": "//ip:port/wallet/recentTx",
+        "method": "post",
+        "request": {
+          "address": "string"
+        },
+        "response": {
+          "status": {
+            "Ack": "success||error",
+            "ErrorMessage": "string",
+            "Timestamp": "string"
+          },
+          "transactionList": []
+        }
+      },
+      "getBalance": {
+        "url": "//ip:port/wallet/getBalance",
+        "method": "post",
+        "request": {
+          "address": "string"
+        },
+        "response": {
+          "status": {
+            "Ack": "success||error",
+            "ErrorMessage": "string",
+            "Timestamp": "string"
+          },
+          "balance": "double"
+        }
+      }
+    }
+  }
+]
