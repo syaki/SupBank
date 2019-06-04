@@ -11,6 +11,9 @@
             >SUPBANK</el-button
           >
         </el-col>
+        <el-link type="primary" href="/bitcoin.apk" target="_blank"
+          >下载APP</el-link
+        >
         <el-col :span="6" :offset="6">
           <section class="profile-header isSignin" v-if="username">
             <el-button

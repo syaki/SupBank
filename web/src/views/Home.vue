@@ -27,7 +27,7 @@
         <el-table-column
           prop="timestamp"
           label="日期"
-          width="140"
+          width="160"
           fixed
         ></el-table-column>
         <el-table-column
@@ -51,7 +51,7 @@
     </section>
     <section class="card">
       <p class="title">Blockchain List</p>
-      <el-table :data="blockList" stripe style="width: 100%">
+      <el-table :data="currentBlockList" stripe style="width: 100%">
         <el-table-column
           prop="height"
           label="高度"
@@ -71,6 +71,12 @@
           </template>
         </el-table-column>
       </el-table>
+      <el-pagination
+        :hide-on-single-page="value"
+        @current-change="handleCurrentChange"
+        layout="prev, pager, next"
+        :total="blockList.length"
+      ></el-pagination>
     </section>
   </div>
 </template>
@@ -84,7 +90,9 @@ export default {
       blockList: [],
       searchForm: {
         keyword: ""
-      }
+      },
+      currentBlockList: [],
+      value: true
     };
   },
   created() {
@@ -99,11 +107,25 @@ export default {
         if (data.status.Ack === "success") {
           for (let i = 0; i < data.transactionList.length; i++) {
             let t = data.transactionList[i];
-            t.timestamp = `${new Date(t.timestamp).getFullYear()}/${new Date(
-              t.timestamp
-            ).getMonth()}/${new Date(t.timestamp).getDate()} ${new Date(
-              t.timestamp
-            ).getHours()}:${new Date(t.timestamp).getMinutes()}`;
+            let time = new Date(t.timestamp);
+            t.timestamp =
+              time.getFullYear() +
+              "/" +
+              (time.getMonth() + 1) +
+              "/" +
+              time.getDate() +
+              "  " +
+              (time.getHours() >= 10
+                ? time.getHours()
+                : `0{$time.getHours()}`) +
+              ":" +
+              (time.getMinutes() >= 10
+                ? time.getMinutes()
+                : `0{$time.getMinutes()}`) +
+              ":" +
+              (time.getSeconds() >= 10
+                ? time.getSeconds()
+                : `0{$time.getSeconds()}`);
           }
           this.transactionList = data.transactionList;
         } else {
@@ -127,6 +149,9 @@ export default {
 
         if (data.status.Ack === "success") {
           this.blockList = data.longestLegalChain;
+          if (this.blockList.length > 10) {
+            this.value = false;
+          }
         } else {
           this.$message.error("请先登录");
           sessionStorage.removeItem("username");
@@ -137,6 +162,9 @@ export default {
       });
   },
   methods: {
+    handleCurrentChange(val) {
+      this.currentBlockList = this.blockList.slice(val * 10 - 10, val * 10 - 1);
+    },
     search: function() {
       if (!this.searchForm.keyword || this.searchForm.keyword.length <= 0) {
         this.$message({
