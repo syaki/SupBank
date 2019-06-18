@@ -59,14 +59,22 @@ export default {
         const data = response.data;
         if (data.status.Ack === "success") {
           if (data.transactionList.length > 0) {
-            for (let i = 0; i < data.transactionList.length; i++) {
-              let t = data.transactionList[i];
-              t.timestamp = `${new Date(t.timestamp).getFullYear()}/${new Date(
-                t.timestamp
-              ).getMonth()}/${new Date(t.timestamp).getDate()} ${new Date(
-                t.timestamp
-              ).getHours()}:${new Date(t.timestamp).getMinutes()}`;
-            }
+            // for (let i = 0; i < data.transactionList.length; i++) {
+            //   let t = data.transactionList[i];
+            //   let time = new Date(t.timestamp);
+            //   t.timestamp =
+            //     time.getFullYear() +
+            //     "/" +
+            //     (time.getMonth() + 1) +
+            //     "/" +
+            //     time.getDate() +
+            //     "  " +
+            //     time.getHours() +
+            //     ":" +
+            //     time.getMinutes() +
+            //     ":" +
+            //     time.getSeconds();
+            // }
           }
           this.transactionList = data.transactionList;
           this.blockList = data.blockList;

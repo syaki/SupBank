@@ -1,9 +1,74 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="UTF-8" />
-    <title>SupBank</title>
-  </head>
+    <head>
+        <meta charset="UTF-8" />
+        <title>SupBank</title>
+    </head>
 
-  <body></body>
+    <body>
+        <button id="createWallet_btn">Create Wallet</button>
+        <script>
+            let createWallet_btn = document.getElementById("createWallet_btn");
+
+            createWallet_btn.addEventListener("click", function() {});
+
+            const EC = require("elliptic").ec;
+            const ec = new EC("secp256k1");
+            const fs = require("fs");
+            const axios = require("axios");
+            const path = require("path");
+
+            const db_dir = path.join(__dirname, "../../db/");
+
+            // generator a key pair
+            const key = ec.genKeyPair();
+            const public_key = key.getPublic("hex");
+            const private_key = key.getPrivate("hex");
+
+            axios({
+                method: "post",
+                url: "//kwjia.top:8990/wallet/create",
+                data: {
+                    address: "",
+                    publicKey: "",
+                    password: "123456"
+                }
+            })
+                .then(response => {
+                    const data = response.data;
+
+                    if (data.ack === "success") {
+                        try {
+                            let wallets_db = JSON.parse(
+                                fs.readFileSync(db_dir + "wallets_db.json")
+                            );
+                            wallets_db.push({
+                                publickey: public_key,
+                                privatekey: private_key
+                            });
+                            fs.writeFileSync(
+                                db_dir + "wallets_db.json",
+                                JSON.stringify(wallets_db),
+                                "utf-8"
+                            );
+
+                            console.log("Create wallet success!\n");
+                            console.log(
+                                `this is your address (public key):\n${public_key}\n`
+                            );
+                            console.log(
+                                `this is your private key (keep this secret! To sign transactions):\n${private_key}`
+                            );
+                        } catch (error) {
+                            console.log(error);
+                        }
+                    } else {
+                        console.log(data.msg);
+                    }
+                })
+                .catch(error => {
+                    console.log(error);
+                });
+        </script>
+    </body>
 </html>

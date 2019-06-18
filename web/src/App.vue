@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <AppHeader />
+    <AppHeader v-if="showHeader" />
     <el-main>
       <div class="main">
         <router-view />
@@ -19,6 +19,32 @@ export default {
   components: {
     AppHeader,
     AppFooter
+  },
+  data() {
+    return {
+      showHeader: true
+    };
+  },
+  created() {
+    if (
+      /AppleWebKit.*mobile/i.test(navigator.userAgent) ||
+      /MIDP|SymbianOS|NOKIA|SAMSUNG|LG|NEC|TCL|Alcatel|BIRD|DBTEL|Dopod|PHILIPS|HAIER|LENOVO|MOT-|Nokia|SonyEricsson|SIE-|Amoi|ZTE/.test(
+        navigator.userAgent
+      )
+    ) {
+      if (window.location.href.indexOf("?mobile") < 0) {
+        try {
+          if (
+            /Android|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent)
+          ) {
+            this.showHeader = false;
+            this.$router.push({
+              path: "homeMobile"
+            });
+          }
+        } catch (e) {}
+      }
+    }
   }
 };
 </script>
@@ -42,7 +68,7 @@ body {
 
 .main {
   position: relative;
-  width: 1000px;
+  max-width: 1000px;
   padding: 0 16px;
   margin: 0 auto;
 }

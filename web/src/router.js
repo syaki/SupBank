@@ -53,6 +53,14 @@ export default new Router({
       meta: {
         title: "Block"
       }
+    },
+    {
+      path: "/homeMobile",
+      name: "homeMobile",
+      component: () => import("./views/HomeMobile.vue"),
+      meta: {
+        title: "Home"
+      }
     }
   ]
 });
