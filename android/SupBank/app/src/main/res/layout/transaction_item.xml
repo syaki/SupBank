@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:descendantFocusability="blocksDescendants">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/deal_img"
+            android:layout_width="57dp"
+            android:layout_height="114dp"
+            android:layout_margin="5px"
+            android:background="@android:color/darker_gray"
+            android:scaleType="fitXY"
+            android:src="@drawable/bitcoin" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TableLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TableRow>
+
+                    <TextView
+                        android:id="@+id/deal_address"
+                        android:layout_width="350dp"
+                        android:layout_height="wrap_content"
+                        android:text="交易地址: " />
+                </TableRow>
+
+                <TableRow>
+
+                    <TextView
+                        android:id="@+id/deal_amount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="交易金额: " />
+                </TableRow>
+
+                <TableRow>
+
+                    <TextView
+                        android:id="@+id/deal_time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="交易时间: " />
+                </TableRow>
+
+                <TableRow>
+
+                    <TextView
+                        android:id="@+id/deal_type"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="转入/转出:" />
+                </TableRow>
+                <TableRow>
+                    <TextView
+                        android:id="@+id/deal_status"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="交易状态:" />
+                </TableRow>
+            </TableLayout>
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+
+
+</LinearLayout>
+

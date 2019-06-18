@@ -8,4 +8,160 @@
     tools:context=".activity.WalletActivity"
     tools:showIn="@layout/activity_wallet">
 
+
+        <TableLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+
+
+
+            <TableRow>
+
+                <TextView
+                    android:id="@+id/my_balance"
+                    android:layout_width="300dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:background="@color/colorPrimary"
+                    android:ems="10"
+                    android:text="我的余额"
+                    app:layout_constraintBottom_toTopOf="@id/my_address"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="parent" />
+            </TableRow>
+
+            <TableRow>
+
+                <TextView
+                    android:id="@+id/my_address"
+                    android:layout_width="300dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:background="@color/colorPrimary"
+                    android:enabled="true"
+                    android:textIsSelectable="true"
+                    android:focusable="true"
+                    android:ems="10"
+                    android:text="我的地址"
+                    app:layout_constraintBottom_toTopOf="@+id/my_balance"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/address_in" />
+            </TableRow>
+            <TableRow>
+                <ImageView
+                    android:id="@+id/image_1"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    tools:srcCompat="@tools:sample/backgrounds/scenic"/>
+            </TableRow>
+
+            <TableRow>
+
+                <EditText
+                    android:id="@+id/address_in"
+                    android:layout_width="300dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:ems="10"
+                    android:inputType="text"
+                    android:hint="转入地址"
+                    app:layout_constraintBottom_toTopOf="@+id/my_address"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/amount"/>
+            </TableRow>
+
+            <TableRow>
+
+                <EditText
+                    android:id="@+id/amount"
+                    android:layout_width="300dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:ems="10"
+                    android:inputType="numberDecimal"
+                    android:hint="请输入金额"
+                    app:layout_constraintBottom_toTopOf="@+id/address_in"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/image_0"/>
+            </TableRow>
+
+
+            <TableRow>
+
+            </TableRow>
+
+            <TableRow>
+                <ImageView
+                    android:id="@+id/image_0"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    tools:srcCompat="@tools:sample/backgrounds/scenic"/>
+            </TableRow>
+
+            <TableRow>
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="200dp"
+                    android:layout_height="wrap_content">
+                    <Button
+                        android:id="@+id/dig_mine"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:text="点我挖矿"
+                        app:layout_constraintEnd_toStartOf="@+id/check_history"
+                        app:layout_constraintStart_toStartOf="parent" />
+
+                    <Button
+                        android:id="@+id/submit"
+                        style="@style/Widget.MaterialComponents.TabLayout.Colored"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:background="@color/colorPrimaryDark"
+                        android:text="转账"/>
+
+
+                    <Button
+                        android:id="@+id/check_history"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:text="查看历史"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/dig_mine" />
+
+
+                </LinearLayout>
+            </TableRow>
+        </TableLayout>
 </android.support.constraint.ConstraintLayout>

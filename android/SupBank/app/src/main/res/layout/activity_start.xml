@@ -10,29 +10,33 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <TableRow android:layout_width="match_parent"
-            android:layout_height="match_parent">
+        <TableRow>
             <ImageView
                 android:id="@+id/bg_img"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_width="420dp"
+                android:layout_height="560dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:srcCompat="@drawable/app_bg"
-                android:contentDescription="TODO" />
+                tools:layout_editor_absoluteY="-37dp" />
+
         </TableRow>
 
 
-        <TableRow android:layout_width="match_parent">
+        <TableRow>
+
             <Button
                 android:id="@+id/startApp"
-                android:layout_width="match_parent"
+                android:layout_width="420dp"
                 android:layout_height="wrap_content"
-                android:text="Experience Now"
-                app:layout_constraintEnd_toStartOf="parent"/>
+                android:text="开始"
+                tools:layout_editor_absoluteX="262dp"
+                tools:layout_editor_absoluteY="521dp"
+                android:background="@color/colorPrimaryDark"/>
         </TableRow>
-
 
 
     </TableLayout>
+
+
 
 </android.support.constraint.ConstraintLayout>
