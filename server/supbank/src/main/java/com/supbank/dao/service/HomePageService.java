@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.supbank.util.ResponseUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,21 +35,18 @@ private static final Logger logger = LoggerFactory.getLogger(HomePageService.cla
 	public DataRow search(HttpServletRequest request, DataRow<String,String> param) {
 		DataRow result = new DataRow();
 		String keyword = param.getString("keyword");
-		String sql1 = "select transactionid,input,output,inputaddress,outputaddress,sum from td_transaction where flag=1 and transactionid='"+keyword+"'";
-		String sql2 = "select height,hash,transactionnumber,miner from td_block where flag=1 and height='"+keyword+"'";
-		String sql3 = "select height,hash,transactionnumber,miner from td_block where flag=1 and hash='"+keyword+"'";
+		String sql1 = "select transactionid,input,output,sum,blockid,status from td_transaction where flag=1 and transactionid='"+keyword+"'";
+		String sql2 = "select blockid,height,hash,prehash,merkleroothash,nonce,blockreward,transactionnumber,miner from td_block where flag=1 and height='"+keyword+"'";
+		String sql3 = "select blockid,height,hash,prehash,merkleroothash,nonce,blockreward,transactionnumber,miner from td_block where flag=1 and hash='"+keyword+"'";
 		List<DataRow> transactionList = dbService.queryForList(sql1);
 		List<DataRow> blockList1 = dbService.queryForList(sql2);
 		List<DataRow> blockList2 = dbService.queryForList(sql3);
 		blockList1.addAll(blockList2);
 		if(transactionList.isEmpty()&&blockList1.isEmpty()) {
-			result.put("ack", "error");
-			result.put("errorMessage", "0 result");
-			result.put("timeStamp", System.currentTimeMillis());
+			result.put("status", ResponseUtils.returnErrorMessage("0 result"));
+
 		}else {
-			result.put("ack", "success");
-			result.put("errorMessage", "");
-			result.put("timeStamp", System.currentTimeMillis());
+			result.put("status", ResponseUtils.returnSuccessMessage());
 			result.put("transactionList", transactionList);
 			result.put("blockList", blockList1);
 		}
@@ -57,19 +55,17 @@ private static final Logger logger = LoggerFactory.getLogger(HomePageService.cla
 	
 	
 	/**
-	 * 最新交易查询
+	 * 最新交易查询(大于10条返回10条，不足返回全部)
 	 * @param request
 	 * @return
 	 */
 	public DataRow getLastTransaction(HttpServletRequest request) {
 		DataRow result = new DataRow();
-		/*这里需要在session中查询当前用户的address*/
-		String address = "asdf562dsaf";
-		String sql = "select transactionid,input,output,inputaddress,outputaddress,sum,timestamp from td_transaction where flag=1 and (inputaddress='"+address+"' or outputaddress='"+address+"') order by timestamp desc limit 1";
+//		/*这里需要在session中查询当前用户的address*/
+//		String address = "asdf562dsaf";
+		String sql = "select transactionid,input,output,sum,timestamp,blockid,status from td_transaction where flag=1 order by timestamp desc limit 0,10";
 		List<DataRow> transactionList = dbService.queryForList(sql);
-		result.put("ack", "success");
-		result.put("errorMessage", "");
-		result.put("timeStamp", System.currentTimeMillis());
+		result.put("status", ResponseUtils.returnSuccessMessage());
 		result.put("transactionList", transactionList);
 		return result;
 	}

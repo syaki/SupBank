@@ -1,6 +1,5 @@
 # SupBank
 M.Sc.1 - Group Project
-演示地址：[supfile.top/supbank/](http://supfile.top/supbank)
 
 ## 技术栈
 

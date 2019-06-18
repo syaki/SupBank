@@ -1,0 +1,23 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/supbank?useUnicode=true&characterEncoding=utf8&autoReconnect=true
+
+    username: root
+    password: abcd
+
+
+
+  session:
+    store-type: none
+
+server:
+  port: 8990
+
+
+logging:
+  file: supbank_project_log.log
+  level:
+    com.supbank: DEBUG
+
+

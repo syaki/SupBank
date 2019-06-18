@@ -9,7 +9,7 @@
               <span>Blockchain Browser</span>
             </div>
             <div class="search">
-              <form action class="searchForm">
+              <form class="searchForm">
                 <div class="search-inner">
                   <div class="input-container">
                     <span class="search-icon icon">
@@ -45,16 +45,37 @@
             <table class="listTable">
               <caption>Lastest Transaction:</caption>
               <tr>
-                <th>Height</th>
-                <th>Hash</th>
-                <th>Nonce</th>
+                <th>ID</th>
+                <th>Output</th>
+                <th>Sum</th>
                 <th>Time</th>
               </tr>
-              <tr v-for="(t, k, i) in transactionList">
-                <td>{{t.height}}</td>
-                <td>{{t.hash}}</td>
-                <td>{{t.nonce}}</td>
+              <tr
+                v-for="t in transactionList"
+                :key="t.id"
+                v-on:click="getTransactionDetail(t.transactionid)"
+              >
+                <td>{{t.transactionid}}</td>
+                <td>{{t.output}}</td>
+                <td>{{t.sum}}</td>
                 <td>{{`${new Date(t.timestamp).getFullYear()}/${new Date(t.timestamp).getMonth()}/${new Date(t.timestamp).getDate()} ${new Date(t.timestamp).getHours()}:${new Date(t.timestamp).getMinutes()}`}}</td>
+              </tr>
+            </table>
+          </div>
+          <div class="blockListCard card">
+            <table class="listTable">
+              <caption>Lastest Block:</caption>
+              <tr>
+                <th>ID</th>
+                <th>Height</th>
+                <th>Hash</th>
+                <th>Pre Hash</th>
+              </tr>
+              <tr v-for="b in blockList" :key="b.id" v-on:click="getBlockDetail(b.blockid)">
+                <td>{{b.blockid}}</td>
+                <td>{{b.height}}</td>
+                <td>{{b.hash}}</td>
+                <td>{{b.prehash}}</td>
               </tr>
             </table>
           </div>
@@ -65,29 +86,55 @@
 </template>
 
 <script>
-import AppHeader from '@/components/AppHeader.vue';
+import AppHeader from "@/components/AppHeader.vue";
 
 export default {
-  name: 'home',
+  name: "home",
   components: {
-    AppHeader,
+    AppHeader
   },
   data() {
     return {
-      searchText: '',
+      searchText: "",
       transactionList: [],
+      blockList: []
     };
   },
   created() {
-    this.$axios
-      .get('/api/get_new_txs')
+    this.$axios({
+      method: "post",
+      url: "http://192.168.1.103:8990/homePage/getLastTransaction",
+      data: {}
+    })
       .then(response => {
         const data = response.data;
 
-        if (data.ack === 'success') {
-          this.transactionList = data.data.txlist;
+        if (data.status.Ack === "success") {
+          this.transactionList = data.transactionList;
         } else {
-          alert(data.data.msg);
+          this.$router.push({
+            path: "signin"
+          });
+        }
+      })
+      .catch(error => {
+        alert(error);
+      });
+
+    this.$axios({
+      method: "post",
+      url: "http://192.168.1.103:8990/block/longestLegalChain",
+      data: {
+        pageNumber: "1"
+      }
+    })
+      .then(response => {
+        const data = response.data;
+
+        if (data.status.Ack === "success") {
+          this.blockList = data.longestLegalChain;
+        } else {
+          alert(data.status.ErrorMessage);
         }
       })
       .catch(error => {
@@ -95,19 +142,35 @@ export default {
       });
   },
   methods: {
-    search: () => {
+    search: function() {
       if (!this.searchText || this.searchText.length <= 0) {
         return;
       }
 
       this.$router.push({
-        path: 'search',
+        path: "search",
         query: {
-          q: this.searchText,
-        },
+          q: this.searchText
+        }
       });
     },
-  },
+    getTransactionDetail: function(id) {
+      this.$router.push({
+        path: "transaction",
+        query: {
+          q: id
+        }
+      });
+    },
+    getBlockDetail: function(id) {
+      this.$router.push({
+        path: "block",
+        query: {
+          q: id
+        }
+      });
+    }
+  }
 };
 </script>
 
@@ -206,5 +269,9 @@ export default {
 
 .listTable td {
   padding: 4px 8px;
+}
+
+tr {
+  cursor: pointer;
 }
 </style>

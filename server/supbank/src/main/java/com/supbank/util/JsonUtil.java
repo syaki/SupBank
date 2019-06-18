@@ -41,8 +41,9 @@ public class JsonUtil {
 	public static String resultJsonString(Object obj)
 	{
 		DataRow ret = new DataRow();
-		ret.put("code",0);//0为没有任何错误
-		ret.put("msginfo", "ok");
+		ret.put("ack","success");//0为没有任何错误
+		ret.put("errorMessage", "success");
+		ret.put("timeStamp", System.currentTimeMillis());
 		ret.put("result",obj);
 		return JSON.toJSONString(ret);
 	}

@@ -8,16 +8,20 @@
             <table class="listTable">
               <caption>Search result:</caption>
               <tr>
-                <th>Height</th>
-                <th>Hash</th>
-                <th>Nonce</th>
-                <th>Time</th>
+                <th>ID</th>
+                <th>Input</th>
+                <th>Output</th>
+                <th>Sum</th>
               </tr>
-              <tr v-for="(t, k, i) in searchResultList">
-                <td>{{t.height}}</td>
-                <td>{{t.hash}}</td>
-                <td>{{t.nonce}}</td>
-                <td>{{`${new Date(t.timestamp).getFullYear()}/${new Date(t.timestamp).getMonth()}/${new Date(t.timestamp).getDate()} ${new Date(t.timestamp).getHours()}:${new Date(t.timestamp).getMinutes()}`}}</td>
+              <tr
+                v-for="t in searchResultList"
+                :key="t.id"
+                v-on:click="getTransactionDetail(t.transactionid)"
+              >
+                <td>{{t.transactionid}}</td>
+                <td>{{t.input}}</td>
+                <td>{{t.output}}</td>
+                <td>{{t.sum}}</td>
               </tr>
             </table>
           </div>
@@ -28,45 +32,53 @@
 </template>
 
 <script>
-import AppHeader from '@/components/AppHeader.vue';
+import AppHeader from "@/components/AppHeader.vue";
 
 export default {
-  name: 'search',
+  name: "search",
   components: {
-    AppHeader,
+    AppHeader
   },
   data() {
     return {
       searchText: this.$route.query.q,
       searchResultList: [],
       pages: 1,
-      page: 1,
+      page: 1
     };
   },
   created() {
     const searchText = this.$route.query.q;
-    const token = localStorage.getItem('token');
 
     this.$axios({
-      method: 'post',
-      url: '/api/s',
+      method: "post",
+      url: "http://192.168.1.103:8990/homePage/search",
       data: {
-        kw: searchText,
-        token: token,
-      },
+        keyword: searchText
+      }
     })
       .then(response => {
         const data = response.data;
-        if (data.ack === 'success') {
-          this.searchResultList = data.data.searchlist;
+        if (data.status.Ack === "success") {
+          this.searchResultList = data.transactionList;
         } else {
-          alert(data.data.msg);
+          alert(data.status.ErrorMessage);
         }
       })
       .catch(error => {
         alert(error);
       });
   },
+  methods: {
+    getTransactionDetail: function(id) {
+      this.$router.push({
+        path: "transaction",
+        query: {
+          q: id
+        }
+      });
+    }
+  }
 };
 </script>
 

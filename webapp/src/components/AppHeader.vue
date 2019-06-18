@@ -28,7 +28,7 @@
         </div>
         <div class="header-wallet">
           <div class="walletName" v-if="walletName">
-            <router-link to="/wallet" class="walletEntry">{{walletName}}</router-link>
+            <span class="walletEntry">{{walletName}}</span>
             <button class="signout" v-on:click="signout">Sign out</button>
           </div>
           <div class="signWallet" v-else>
@@ -43,18 +43,17 @@
 
 <script>
 export default {
-  name: 'AppHeader',
+  name: "AppHeader",
   data() {
     return {
       walletName: null,
-      searchText: '',
+      searchText: ""
     };
   },
   created() {
-    var walletName = localStorage.getItem('wallet_name');
-    var token = localStorage.getItem('token');
+    var walletName = localStorage.getItem("wallet_name");
 
-    if (!token || !walletName) {
+    if (!walletName) {
       this.walletName = null;
     } else {
       this.walletName = walletName;
@@ -67,19 +66,31 @@ export default {
       }
 
       this.$router.push({
-        path: 'search',
+        path: "search",
         query: {
-          q: this.searchText,
-        },
+          q: this.searchText
+        }
       });
-      this.$router.go(0);
     },
     signout: function() {
-      localStorage.removeItem('wallet_name');
-      localStorage.removeItem('token');
-      this.$router.go(0);
-    },
-  },
+      this.$axios({
+        method: "post",
+        url: "http://192.168.1.103:8990/user/logout"
+      })
+        .then(response => {
+          const data = response.data;
+          if (data.status.Ack === "success") {
+            localStorage.removeItem("wallet_name");
+            this.$router.go(0);
+          } else {
+            alert(data.status.ErrorMessage);
+          }
+        })
+        .catch(error => {
+          alert(error);
+        });
+    }
+  }
 };
 </script>
 
