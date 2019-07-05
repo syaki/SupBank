@@ -3,8 +3,11 @@ package com.supbank;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.supbank.base.DBService;
+import com.supbank.dao.service.HomePageService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -16,20 +19,31 @@ import com.supbank.util.RSAUtils;
 @SpringBootTest
 public class SupbankApplicationTests {
 
+	@Autowired
+	private HomePageService homePageService;
+
 	@Test
 	public void contextLoads() throws Exception {
 
 //		EmailUtil.sendEmail("302589689@qq.com", "<a>562364</a> 别慌，这是一封测试邮件");
-		
-		String data = "1904232106460001"+"2187e984a6c38cc35830e139e9ac2ba29ab32476"+"56aa8b2fd3c2109f598ae37ccc3dd19173d60497"+50;
-		String sign = "L4EpLC5QqkEAdubIe86ERpaPoEiRlWRI6hSnj1tW4a6NqBOLvi6UkJv4vf72HaYB9NwOt4V0Xp0v\n" + 
-				"BGp4ZEJBvu8Fixcm4mnT0p//azM3xGFHFa+aKQnFQi5ndcWN+0VlFjfaFj0OPYxuPOt/MRqDC/8R\n" + 
-				"ik+e2r/dHgvhIhHrnvU=";
-		String pubKey = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCd0ko/baDps8o1uyd5bL0JTFmyCg/+OfkHEQBP\n" + 
-				"akZKabfUYfgR2AQOm25+JLAAv27DRZrbucpCDoKH/YHeSE8vTT6hNZTHW+nN3M0/QKcK6xP8NZDs\n" + 
-				"0BbTytzixBn/P/Pqy0wdG6av3xi1/i9G5v1XneoYeATUwXG0q1SnWEA1OQIDAQAB";
-		
-		System.out.println(RSAUtils.verify(data.getBytes(), pubKey, sign));
+//
+//		String data = "16nkaR553tqT8VvmRmCzYVxXuzTxZ9pu98"+"56aa8b2fd3c2109f598ae37ccc3dd19173d60497"+4;
+//
+//
+//
+////		System.out.println(RSAUtils.verify(data.getBytes(), "03752c4616434fe8647ed113bd0a8bfc3ce15224f96c7656bbefac2795d1c67d59", "MTZua2FSNTUzdHFUOFZ2bVJtQ3pZVnhYdXpUeFo5cHU5ODU2YWE4YjJmZDNjMjEwOWY1OThhZTM3Y2NjM2RkMTkxNzNkNjA0OTc0LjA="));
+//
+//
+//		Map<String, Object> map = RSAUtils.genKeyPair();
+//		String privKey = RSAUtils.getPrivateKey(map);
+//		String pubKey = RSAUtils.getPublicKey(map);
+//
+//		String sign = RSAUtils.sign(data.getBytes(), privKey);
+//		System.out.println(RSAUtils.verify(data.getBytes(), pubKey, sign));
+
+
+
+
 
 
 	}

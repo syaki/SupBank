@@ -1,6 +1,7 @@
 package com.supbank.controller;
 
 import com.supbank.base.MyException;
+import com.supbank.util.ResponseUtils;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -44,9 +45,8 @@ public class MyControllerAdvice {
     @ResponseBody
     @ExceptionHandler(value = MyException.class)
     public Map myErrorHandler(MyException me) {
-        Map<String, String> map = new HashMap<>();
-        map.put("code", me.getCode());
-        map.put("msg", me.getMsg());
+        Map<String, Object> map = new HashMap<>();
+        map.put("status", ResponseUtils.returnErrorMessage(me.getMsg()));
         return map;
     }
 

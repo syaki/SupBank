@@ -44,7 +44,7 @@ public class BlockController {
 	 * @param request
 	 * @return
 	 */
-	@CrossOrigin
+	@CrossOrigin("*")
 	@ResponseBody
 	@PostMapping("/longestLegalChain")
 	public String getLongestLegalChain(HttpServletRequest request, @RequestBody DataRow<String, String> params) {
@@ -52,7 +52,17 @@ public class BlockController {
 		result = blockService.getLongestLegalChain(request, params);
 		return JSON.toJSONString(result);
 	}
-	
+
+
+	@CrossOrigin("*")
+	@ResponseBody
+	@PostMapping("/create")
+	public String createBlock(@RequestBody DataRow<String, String> params) {
+		DataRow result = null;
+		result = blockService.createBlock(params);
+		return JSON.toJSONString(result);
+	}
+
 	
 	
 }

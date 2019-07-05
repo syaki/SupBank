@@ -2,7 +2,9 @@ package com.supbank.dao.service;
 
 import java.util.List;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.supbank.util.ResponseUtils;
@@ -38,6 +40,7 @@ public class UserService {
 		DataRow result = new DataRow<>();
 
 		String code = params.getString("verificationCode");
+
 		HttpSession session = request.getSession();
 		JSONObject jsonobj = (JSONObject)session.getAttribute("verifyCode");
 
@@ -126,7 +129,7 @@ public class UserService {
 	 * @param params
 	 * @return
 	 */
-	public DataRow login(HttpServletRequest request, DataRow params) {
+	public DataRow login(HttpServletRequest request, HttpServletResponse response, DataRow params) {
 		DataRow result = new DataRow();
 
 		String username = params.getString("username");
@@ -145,16 +148,32 @@ public class UserService {
 		}else {
 			result.put("status", ResponseUtils.returnSuccessMessage());
 			request.getSession().setAttribute("username", username);
+			String sessionid = request.getSession().getId();
+			Cookie cookie = new Cookie("sessionId", sessionid);
+			response.addCookie(cookie);
 			return result;
 		}
 		
 		
 	}
-	
-	
 
-	
-	
+
+	/**
+	 * 登出
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	public DataRow logout(HttpServletRequest request, HttpServletResponse response) {
+		DataRow result = new DataRow();
+		request.getSession().removeAttribute("username");
+		result.put("status", ResponseUtils.returnSuccessMessage());
+		return result;
+
+	}
+
+
+
 	
 	
 	
