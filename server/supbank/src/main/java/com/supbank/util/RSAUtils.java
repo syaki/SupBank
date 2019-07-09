@@ -14,6 +14,7 @@ import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 import javax.crypto.Cipher;
 
@@ -87,6 +88,7 @@ public class RSAUtils {
         RSAPublicKey publicKey = (RSAPublicKey) keyPair.getPublic();
         RSAPrivateKey privateKey = (RSAPrivateKey) keyPair.getPrivate();
         String address = RipeMD160Util.encodeRipeMD160Hex(SHA256Util.SHA256(Base64.encodeBase64String(publicKey.getEncoded())).getBytes());
+
         Map<String, Object> keyMap = new HashMap<String, Object>(3);
         keyMap.put(PUBLIC_KEY, publicKey);
         keyMap.put(PRIVATE_KEY, privateKey);

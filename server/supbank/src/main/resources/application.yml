@@ -4,16 +4,26 @@ spring:
     url: jdbc:mysql://localhost:3306/supbank?useUnicode=true&characterEncoding=utf8&autoReconnect=true
 
     username: root
-    password: abcd
+    password: abc
   #出现错误时, 直接抛出异常
   mvc:
     throw-exception-if-no-handler-found: true
+    # 定位页面的目录到static/下
+    view:
+      prefix: /
+      suffix: .html
   #不要为我们工程中的资源文件建立映射
   resources:
-    add-mappings: false
-      
+    add-mappings: true
+
+    static-locations: classpath:/static/
   session:
     store-type: none
+
+
+  profiles:
+    active: dev
+
 
 server:
   port: 8990

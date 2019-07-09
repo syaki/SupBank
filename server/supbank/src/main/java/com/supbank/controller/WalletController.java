@@ -63,14 +63,13 @@ public class WalletController {
 
 
 
-    @CrossOrigin
+    @CrossOrigin("*")
     @ResponseBody
-    @PostMapping("/verify")
-    public String verifyTx() {
-        DataRow result = walletService.txVerifyAndEditBalance("1904271708530001", "test_blockid");
+    @PostMapping("/create")
+    public String createWallet(@RequestBody DataRow<String, String> params) {
+        DataRow result = null;
+        result = walletService.createWallet(params);
         return JSON.toJSONString(result);
     }
-
-
 
 }

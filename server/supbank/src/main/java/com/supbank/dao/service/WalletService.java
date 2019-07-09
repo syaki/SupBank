@@ -3,15 +3,12 @@ package com.supbank.dao.service;
 import java.util.List;
 import java.util.Map;
 
-import com.supbank.util.DateTimeUtil;
-import com.supbank.util.ResponseUtils;
+import com.supbank.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.supbank.base.DBService;
 import com.supbank.base.DataRow;
-import com.supbank.util.GeneratorIDUtil;
-import com.supbank.util.RSAUtils;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
@@ -26,18 +23,15 @@ public class WalletService {
 	 * 新建钱包
 	 * @return
 	 */
-	public DataRow createWallet(HttpServletRequest request, DataRow params) {
+	public DataRow createWallet(DataRow params) {
 
 		String walletid = GeneratorIDUtil.generatorId();
-
-
-
 
 		double balance = 0;
 		params.put("walletid", walletid);
 
 		params.put("balance", balance);
-
+		params.put("password", MD5Util.makeMD5(params.getString("password")));
 		DataRow result = new DataRow();
 		try {
 			dbService.Insert("td_wallet", params);
@@ -67,9 +61,61 @@ public class WalletService {
 		DataRow result = new DataRow();
 		String id = GeneratorIDUtil.generatorId();
 
+		String input = params.getString("input");
+		String output = params.getString("output");
+		String password = MD5Util.makeMD5(params.getString("password"));
+		double sum = params.getDouble("sum");
 		params.put("transactionid", id);
 		params.put("timestamp", DateTimeUtil.getNowDateStr());
 		params.put("status", 1);
+
+		//查询input用户余额
+		double input_balance = 0;
+		String queryBalanceSQL = "select balance,publicKey from td_wallet where flag=1 and address='"+input+"' and password='"+password+"'";
+		try {
+			DataRow wallet_infor = dbService.querySimpleRowBySql(queryBalanceSQL);
+			if(wallet_infor.isEmpty()) {
+				result.put("status", ResponseUtils.returnErrorMessage("password or address error"));
+				return result;
+			}
+			input_balance = wallet_infor.getDouble("balance");
+		} catch (Exception e) {
+			result.put("status", ResponseUtils.returnErrorMessage("query balance db error"));
+			e.printStackTrace();
+			return result;
+		}
+		if(input_balance < sum) {
+			//钱不够
+			result.put("status", ResponseUtils.returnErrorMessage("余额不足"));
+			return result;
+		}
+
+		//查询output存不存在
+		try {
+			DataRow outputUser = dbService.querySimpleRowBySql("select address from td_wallet where address='"+params.getString("output")+"'");
+			if (outputUser.isEmpty()) {
+				result.put("status", ResponseUtils.returnErrorMessage("收款方地址不存在"));
+				return result;
+			}
+		} catch (Exception e) {
+			result.put("status", ResponseUtils.returnErrorMessage("query output address error"));
+			return result;
+		}
+
+		String editInputSQL = "update td_wallet set balance=balance-"+ sum +" where flag=1 and address='"+input+"'";
+//		String editOutputSQL = "update td_wallet set balance=balance+"+ sum +" where flag=1 and address='"+output+"'";
+
+		try {
+			dbService.UpdateBySql(editInputSQL);
+//			dbService.UpdateBySql(editOutputSQL);
+
+
+		} catch (Exception e) {
+			result.put("status", ResponseUtils.returnErrorMessage("update balance db error"));
+			e.printStackTrace();
+		}
+
+
 
 		try {
 			dbService.Insert("td_transaction", params);
@@ -116,88 +162,6 @@ public class WalletService {
 
 
 
-	/**
-	 * 验证交易并更新余额
-	 * @param transactionid
-	 * @param blockid
-	 * @return
-	 */
-	@Transactional
-	public DataRow txVerifyAndEditBalance(String transactionid,String blockid) {
-		DataRow result = new DataRow();
-
-		String input = "";
-		String output = "";
-		double sum = 0;
-		//查询交易信息
-		String txInforSQL = "select * from td_transaction where flag=1 and transactionid='"+transactionid+"'";
-		DataRow tx = null;
-		try {
-			tx = dbService.querySimpleRowBySql(txInforSQL);
-			if(tx.isEmpty()) {
-				result.put("status", ResponseUtils.returnErrorMessage("transaction is not existed"));
-				return result;
-			}
-		} catch (Exception e1) {
-			result.put("status", ResponseUtils.returnErrorMessage("query txInfor db error"));
-			e1.printStackTrace();
-			return result;
-		}
-		input = tx.getString("input");
-		output = tx.getString("output");
-		sum = tx.getDouble("sum");
-		String tx_infor = transactionid+input+output+sum;
-		String signature = tx.getString("signature");
-		//查询input用户余额
-		double input_balance = 0;
-		String publicKey="";
-		String queryBalanceSQL = "select balance,publicKey from td_wallet where flag=1 and address='"+input+"'";
-		try {
-			DataRow wallet_infor = dbService.querySimpleRowBySql(queryBalanceSQL);
-			input_balance = wallet_infor.getDouble("balance");
-			publicKey = wallet_infor.getString("publicKey");
-		} catch (Exception e) {
-			result.put("status", ResponseUtils.returnErrorMessage("query balance db error"));
-			e.printStackTrace();
-			return result;
-		}
-		boolean verifyResult = true;
-		if(input_balance>=sum) {
-			//钱够用
-			try {
-				verifyResult = RSAUtils.verify(tx_infor.getBytes(), publicKey, signature);
-
-			} catch (Exception e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-			if(verifyResult) {
-				//验证通过
-				String editInputSQL = "update td_wallet set balance="+(input_balance-sum)+" where flag=1 and address='"+input+"'";
-				String editOutputSQL = "update td_wallet set balance=balance+"+sum+" where flag=1 and address='"+output+"'";
-				String editTxSQL = "update td_transaction set status=2,blockid='"+blockid+"' where flag=1 and transactionid='"+transactionid+"'";
-				try {
-					dbService.UpdateBySql(editInputSQL);
-					dbService.UpdateBySql(editOutputSQL);
-					dbService.UpdateBySql(editTxSQL);
-					result.put("status", ResponseUtils.returnSuccessMessage());
-
-				} catch (Exception e) {
-					result.put("status", ResponseUtils.returnErrorMessage("update balance db error"));
-					e.printStackTrace();
-					return result;
-				}
-			}else {
-				result.put("status", ResponseUtils.returnErrorMessage("verify failed,data maybe changed"));
-			}
-
-
-		}else {
-			result.put("status", ResponseUtils.returnErrorMessage("balance not enough"));
-		}
-
-		return result;
-	}
 
 
 
@@ -223,6 +187,13 @@ public class WalletService {
 			//查询最近交易列表
 			String sql = "SELECT transactionid,input,output,sum,blockid,timestamp,status FROM td_transaction WHERE flag=1 AND (input='"+address+"' OR output='"+address+"') ORDER BY TIMESTAMP DESC";
 			List<DataRow> transactionList = dbService.queryForList(sql);
+			for(DataRow tx: transactionList) {
+				if(tx.getString("input").equals(address)) {
+					tx.put("type", "pay");
+				}else {
+					tx.put("type", "receive");
+				}
+			}
 			result.put("status", ResponseUtils.returnSuccessMessage());
 			result.put("transactionList", transactionList);
 		} catch (Exception e) {
@@ -246,9 +217,14 @@ public class WalletService {
 
 		String address = params.getString("address");
 
+
 		String sql = "SELECT a.balance FROM td_wallet a WHERE a.flag=1 AND a.address='"+ address +"'";
 		try {
 			DataRow value = dbService.querySimpleRowBySql(sql);
+			if(value.isEmpty()) {
+				result.put("status", ResponseUtils.returnErrorMessage("该用户不存在"));
+				return result;
+			}
 			result.put("status", ResponseUtils.returnSuccessMessage());
 			result.put("balance", value.getInt("balance"));
 		} catch (Exception e) {
@@ -262,27 +238,7 @@ public class WalletService {
 
 
 
-	/**
-	 * 根据address查询私钥
-	 * @param address
-	 * @return
-	 */
-//	public DataRow getPrivateKeyByAddress(String address) {
-//		DataRow result = new DataRow();
-//		String sql = "select privateKey from td_wallet where flag=1 and address='"+address+"'";
-//		try {
-//			DataRow value = dbService.querySimpleRowBySql(sql);
-//			result.put("flag", 1);
-//			result.put("privateKey", value.getString("privateKey"));
-//		} catch (Exception e) {
-//			// TODO Auto-generated catch block
-//			result.put("flag", 0);
-//			e.printStackTrace();
-//		}
-//
-//		return result;
-//	}
-	
+
 	
 	
 	
