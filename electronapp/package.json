@@ -10,6 +10,6 @@
   "author": "hui_xie <hui.x@outlook.com>",
   "license": "ISC",
   "devDependencies": {
-    "electron": "^5.0.2"
+    "electron": "^7.2.4"
   }
 }
